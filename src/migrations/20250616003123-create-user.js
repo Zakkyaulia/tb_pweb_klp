@@ -9,14 +9,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstName: {
+      nama: {
         type: Sequelize.STRING
       },
-      lastName: {
-        type: Sequelize.STRING
+      nim: {
+        type: Sequelize.STRING 
       },
-      email: {
-        type: Sequelize.STRING
+      role: {
+        type: Sequelize.ENUM('admin', 'user')
       },
       createdAt: {
         allowNull: false,
