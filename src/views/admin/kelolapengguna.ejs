@@ -13,18 +13,14 @@
         .logo-icon {
             background: linear-gradient(135deg, #059669, #047857);
         }
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, rgba(5, 150, 105, 0.1), rgba(4, 120, 87, 0.1));
-            transition: width 0.3s ease;
+        /* Hapus efek ::before dan gunakan hover sederhana */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
         }
-        .nav-link:hover::before {
-            width: 100%;
+        .nav-link:hover {
+            color: #047857; /* Ubah warna teks saat hover */
+            background-color: rgba(5, 150, 105, 0.1); /* Latar belakang halus opsional */
         }
         .submenu-link.active {
             background: linear-gradient(90deg, #f97316, #ea580c);
@@ -82,7 +78,7 @@
             <nav>
                 <ul class="nav-menu list-none p-0 py-4">
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
+                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
                             <i class="fas fa-tachometer-alt w-5 mr-3 text-gray-600"></i>
                             Dashboard
                         </a>
@@ -110,19 +106,19 @@
                         </div>
                     </li>
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
+                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
                             <i class="fas fa-file-contract w-5 mr-3 text-gray-600"></i>
                             Template
                         </a>
                     </li>
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
+                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
                             <i class="fas fa-bullhorn w-5 mr-3 text-gray-600"></i>
                             Pengumuman
                         </a>
                     </li>
                     <li class="nav-item mb-1">
-                        <a href="/admin/kelola-pengguna" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
+                        <a href="/admin/kelola-pengguna" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
                             <i class="fas fa-users w-5 mr-3 text-gray-600"></i>
                             Kelola Pengguna
                         </a>

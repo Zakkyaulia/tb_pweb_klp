@@ -13,18 +13,15 @@
         .logo-icon {
             background: linear-gradient(135deg, #059669, #047857);
         }
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, rgba(5, 150, 105, 0.1), rgba(4, 120, 87, 0.1));
-            transition: width 0.3s ease;
+        /* Hapus efek ::before dan gunakan hover sederhana */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
         }
-        .nav-link:hover::before {
-            width: 100%;
+        .nav-link:hover {
+            color: #047857; /* Ubah warna teks saat hover */
+            background-color: rgba(5, 150, 105, 0.1); /* Latar belakang halus opsional */
+            transform: translateX(4px); /* Efek geser kecil dari script */
         }
         .submenu-link.active {
             background: linear-gradient(90deg, #f97316, #ea580c);
@@ -82,7 +79,7 @@
             <nav>
                 <ul class="nav-menu list-none p-0 py-4">
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
+                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
                             <i class="fas fa-tachometer-alt w-5 mr-3 text-gray-600"></i>
                             Dashboard
                         </a>
@@ -110,15 +107,21 @@
                         </div>
                     </li>
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
+                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
                             <i class="fas fa-file-contract w-5 mr-3 text-gray-600"></i>
                             Template
                         </a>
                     </li>
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
+                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
                             <i class="fas fa-bullhorn w-5 mr-3 text-gray-600"></i>
                             Pengumuman
+                        </a>
+                    </li>
+                    <li class="nav-item mb-1">
+                        <a href="/admin/kelola-pengguna" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
+                            <i class="fas fa-users w-5 mr-3 text-gray-600"></i>
+                            Kelola Pengguna
                         </a>
                     </li>
                 </ul>
@@ -156,29 +159,29 @@
                             </tr>
                         </thead>
                         <tbody class="table-body" id="tableBody">
-    <% if (requests && requests.length > 0) { %>
-        <% requests.forEach((request, index) => { %>
-            <tr>
-                <td class="p-6 text-gray-700 text-sm text-center"><%= index + 1 %></td>
-                <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
-                <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
-                <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
-                <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
-                <td class="p-6 text-gray-700 text-sm text-center"><%= request.status %></td>
-                <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
-                <td class="p-6 text-gray-700 text-sm text-center"><%= request.komentar_admin || '—' %>
-                    <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
-                </td>
-            </tr>
-        <% }); %>
-    <% } else { %>
-        <tr>
-            <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
-                Tidak ada data permintaan yang diproses
-            </td>
-        </tr>
-    <% } %>
-</tbody>
+                            <% if (requests && requests.length > 0) { %>
+                                <% requests.forEach((request, index) => { %>
+                                    <tr>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= index + 1 %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.status %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.komentar_admin || '—' %>
+                                            <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
+                                        Tidak ada data permintaan yang diproses
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
                     </table>
                 </div>
             </div>
