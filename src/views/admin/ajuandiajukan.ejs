@@ -44,6 +44,20 @@
         .table-header {
             background: linear-gradient(90deg, #f97316, #ea580c);
         }
+        .submenu-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .nav-submenu.active .submenu-list {
+            max-height: 200px; /* Sesuaikan dengan tinggi maksimum submenu */
+        }
+        .submenu-header i {
+            transition: transform 0.3s ease-in-out;
+        }
+        .nav-submenu.active .submenu-header i {
+            transform: rotate(180deg);
+        }
         @media (max-width: 768px) {
             .sidebar.open {
                 transform: translateX(0);
@@ -75,7 +89,7 @@
                     </li>
                     <li class="nav-item">
                         <div class="nav-submenu">
-                            <div class="submenu-header flex items-center justify-between p-3 text-gray-700 cursor-pointer">
+                            <div class="submenu-header flex items-center justify-between p-3 text-gray-700 cursor-pointer" onclick="toggleSubmenu(this)">
                                 <div class="flex items-center">
                                     <i class="fas fa-file-alt w-5 mr-3 text-gray-600"></i>
                                     Permintaan
@@ -133,9 +147,11 @@
                             <tr>
                                 <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">No</th>
                                 <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Nama</th>
+                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">NIM</th>
+                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Tanggal</th>
                                 <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Jenis Surat</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Isi Form</th>
                                 <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Status</th>
+                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">File Pengantar</th>
                                 <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Komentar</th>
                             </tr>
                         </thead>
@@ -145,9 +161,12 @@
                                     <tr>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.id %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal || 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.status %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar || 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center komentar-cell"><%= request.komentar_admin || '—' %>
                                             <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
                                         </td>
@@ -155,7 +174,7 @@
                                 <% }); %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="6" class="empty-state p-6 text-gray-500 text-center italic">
+                                    <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
                                         Tidak ada data permintaan yang diajukan
                                     </td>
                                 </tr>
@@ -199,10 +218,26 @@
             closeKomentarModal();
         }
 
+        function toggleSubmenu(header) {
+            const submenu = header.parentElement;
+            const submenuList = submenu.querySelector('.submenu-list');
+            const chevron = header.querySelector('i');
+
+            submenu.classList.toggle('active');
+
+            if (submenu.classList.contains('active')) {
+                submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                submenuList.style.maxHeight = '0';
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             searchInput.addEventListener('input', function(e) {
-                console.log('Searching for:', e.target.value);
+                console.log('Mencari:', e.target.value);
             });
 
             const navLinks = document.querySelectorAll('.nav-link');
@@ -227,7 +262,7 @@
                         window.location.href = '/admin/requests/diproses';
                     } else if (this.textContent.trim() === 'Disetujui') {
                         window.location.href = '/admin/requests/disetujui';
-                  }
+                    }
                 });
 
                 link.addEventListener('mouseenter', function () {
