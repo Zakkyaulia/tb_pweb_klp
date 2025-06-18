@@ -1,25 +1,27 @@
+// src/models/user.js
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      // define association here jika perlu
     }
   }
   User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    user_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    nama: DataTypes.STRING,
+    nim: DataTypes.STRING,
+    email: DataTypes.STRING,
+    username: DataTypes.STRING, // Tambahkan ini
+    password: DataTypes.STRING  // Tambahkan ini
   }, {
     sequelize,
     modelName: 'User',
+    tableName: 'user', // penting agar cocok dengan nama tabel migrasi
   });
   return User;
 };

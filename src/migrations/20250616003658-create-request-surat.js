@@ -16,18 +16,21 @@ module.exports = {
           key: 'user_id'
         },
       },
-      surat_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'surat', 
-          key: 'surat_id'
-        },
+      nim: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      jenis_surat: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       tanggal_request: {
         type: Sequelize.DATE
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.ENUM
+        ('diajukan', 'diproses', 'selesai',),
+        defaultValue: 'diajukan',
       },
       file_pengantar: {
         type: Sequelize.STRING
