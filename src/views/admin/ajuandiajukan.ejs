@@ -104,7 +104,7 @@
                                     <a href="/admin/requests/diproses" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Diproses</a>
                                 </li>
                                 <li class="submenu-item mb-1">
-                                    <a href="#" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Selesai</a>
+                                    <a href="/admin/requests/selesai" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Selesai</a>
                                 </li>
                             </ul>
                         </div>
@@ -119,6 +119,12 @@
                         <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
                             <i class="fas fa-bullhorn w-5 mr-3 text-gray-600"></i>
                             Pengumuman
+                        </a>
+                    </li>
+                    <li class="nav-item mb-1">
+                        <a href="/admin/kelola-pengguna" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
+                            <i class="fas fa-users w-5 mr-3 text-gray-600"></i>
+                            Kelola Pengguna
                         </a>
                     </li>
                 </ul>
@@ -164,9 +170,13 @@
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.status %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center">
+                                            <select class="status-dropdown w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" onchange="updateStatus(this, '<%= request.id %>')">
+                                                <option value="diajukan" <%= request.status === 'diajukan' ? 'selected' : '' %>>Diajukan</option>
+                                                <option value="diproses" <%= request.status === 'diproses' ? 'selected' : '' %>>Diproses</option>
+                                            </select>
+                                        </td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar || 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center komentar-cell"><%= request.komentar_admin || '—' %>
                                             <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
                                         </td>
@@ -231,6 +241,29 @@
             } else {
                 submenuList.style.maxHeight = '0';
                 chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        async function updateStatus(selectElement, requestId) {
+            const newStatus = selectElement.value;
+            const row = selectElement.closest('tr');
+            try {
+                const response = await fetch(`/admin/requests/update/${requestId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if (response.ok) {
+                    if (newStatus === 'diproses') {
+                        row.remove(); // Hapus dari tabel saat ini
+                        window.location.href = '/admin/requests/diproses'; // Arahkan ke halaman diproses
+                    }
+                } else {
+                    alert('Gagal memperbarui status');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan');
             }
         }
 

@@ -12,9 +12,13 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'user', 
+          model: 'user',
           key: 'user_id'
         },
+      },
+      nama: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       nim: {
         type: Sequelize.STRING,
@@ -28,8 +32,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       status: {
-        type: Sequelize.ENUM
-        ('diajukan', 'diproses', 'selesai',),
+        type: Sequelize.ENUM('diajukan', 'diproses', 'selesai'),
         defaultValue: 'diajukan',
       },
       file_pengantar: {

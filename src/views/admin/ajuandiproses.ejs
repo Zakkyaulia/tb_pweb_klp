@@ -155,31 +155,35 @@
                                 <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Komentar</th>
                             </tr>
                         </thead>
-                        <tbody class="table-body" id="tableBody">
-                            <% if (requests && requests.length > 0) { %>
-                                <% requests.forEach(request => { %>
-                                    <tr>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.id %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.status %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center komentar-cell"><%= request.komentar_admin || '—' %>
-                                            <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
-                                        Tidak ada data permintaan yang diproses
-                                    </td>
-                                </tr>
-                            <% } %>
-                        </tbody>
+            <tbody class="table-body" id="tableBody">
+                <% if (requests && requests.length > 0) { %>
+                <% requests.forEach((request, index) => { %>
+            <tr>
+                <td class="p-6 text-gray-700 text-sm text-center"><%= index + 1 %></td>
+                <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
+                <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
+                <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
+                <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
+                <td class="p-6 text-gray-700 text-sm text-center">
+                <select class="status-dropdown w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" onchange="updateStatus(this, '<%= request.id %>')">
+                <option value="diproses" <%= request.status === 'diproses' ? 'selected' : '' %>>Diproses</option>
+                <option value="selesai" <%= request.status === 'selesai' ? 'selected' : '' %>>Selesai</option>
+                </select>
+                </td>
+                <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
+                <td class="p-6 text-gray-700 text-sm text-center"><%= request.komentar_admin || '—' %>
+                    <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
+                </td>
+            </tr>
+        <% }); %>
+    <% } else { %>
+        <tr>
+            <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
+                Tidak ada data permintaan yang diproses
+            </td>
+        </tr>
+    <% } %>
+</tbody>
                     </table>
                 </div>
             </div>
@@ -196,6 +200,30 @@
         </div>
     </div>
     <script>
+
+    async function updateStatus(selectElement, requestId) {
+    const newStatus = selectElement.value;
+    const row = selectElement.closest('tr');
+    try {
+        const response = await fetch(`/admin/requests/update/${requestId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        });
+        if (response.ok) {
+            if (newStatus === 'selesai') {
+                row.remove(); // Hapus dari tabel saat ini
+                window.location.href = '/admin/requests/selesai'; // Arahkan ke halaman selesai
+            }
+        } else {
+            alert('Gagal memperbarui status');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan');
+    }
+}
+
         let selectedRow = null;
 
         function openKomentarModal(row) {

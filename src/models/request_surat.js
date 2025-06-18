@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   request_surat.init({
     user_id: DataTypes.INTEGER,
+    nama: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     nim: {
       type: DataTypes.STRING,
       allowNull: false

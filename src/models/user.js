@@ -1,4 +1,3 @@
-// src/models/user.js
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
@@ -15,13 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     nama: DataTypes.STRING,
     nim: DataTypes.STRING,
+    jurusan: DataTypes.STRING,
     email: DataTypes.STRING,
-    username: DataTypes.STRING, // Tambahkan ini
-    password: DataTypes.STRING  // Tambahkan ini
+    username: DataTypes.STRING,
+    password: DataTypes.STRING,
+   // Tambahan field jurusan
   }, {
     sequelize,
     modelName: 'User',
-    tableName: 'user', // penting agar cocok dengan nama tabel migrasi
+    tableName: 'user', // cocokkan dengan migration
   });
   return User;
 };

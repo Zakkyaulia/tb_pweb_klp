@@ -39,9 +39,19 @@ const getUserByNim = async (req, res) => {
   }
 };
 
-const getAllUsers = async (req, res) => {
+const fetchAllUsers = async () => {
   try {
     const users = await User.findAll();
+    return users; // Kembalikan data mentah untuk rendering
+  } catch (error) {
+    console.error(error);
+    throw error; // Lempar error agar ditangani di rute
+  }
+};
+
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await fetchAllUsers();
     return res.status(200).json(users);
   } catch (error) {
     console.error(error);
@@ -52,5 +62,6 @@ const getAllUsers = async (req, res) => {
 module.exports = {
   deleteUserByNim,
   getUserByNim,
-  getAllUsers
+  getAllUsers,
+  fetchAllUsers // Ekspor fungsi ini untuk digunakan di rute
 };
