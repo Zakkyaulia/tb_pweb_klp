@@ -225,7 +225,9 @@
                         window.location.href = '/admin/requests/diajukan';
                     } else if (this.textContent.trim() === 'Diproses') {
                         window.location.href = '/admin/requests/diproses';
-                    }
+                    } else if (this.textContent.trim() === 'Disetujui') {
+                        window.location.href = '/admin/requests/disetujui';
+                  }
                 });
 
                 link.addEventListener('mouseenter', function () {

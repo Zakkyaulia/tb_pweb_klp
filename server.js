@@ -3,8 +3,8 @@ const app = express();
 const path = require('path');
 const sequelize = require('./src/config/db');
 
-const userRoutes = require('./src/routes/userroute'); // Sesuaikan dengan nama file: userroute.js
-const adminRoutes = require('./src/routes/adminroute'); // Sesuaikan dengan nama file: adminroute.js
+const userRoutes = require('./src/routes/userroute');
+const adminRoutes = require('./src/routes/adminroute');
 
 // Mengatur EJS sebagai view engine
 app.set('view engine', 'ejs');
@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routing ke halaman utama (opsional, arahkan ke default)
 app.get('/', (req, res) => {
-  res.redirect('/admin/requests/diajukan'); // Arahkan ke halaman default "Diproses"
+  res.redirect('/admin/requests/diajukan'); // Arahkan ke halaman default "Diajukan"
 });
 
 // Route untuk API user
@@ -31,7 +31,7 @@ app.use('/api/users', userRoutes);
 app.use('/admin', adminRoutes);
 
 // Sinkronisasi model dengan database
-sequelize.sync({ force: false }) // force: true akan menghapus dan membangun ulang tabel
+sequelize.sync({ force: false })
   .then(() => console.log('Database dan model disinkronisasi'))
   .catch(err => console.log('Error sinkronisasi:', err));
 
