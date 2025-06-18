@@ -104,7 +104,7 @@
                                     <a href="/admin/requests/diproses" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Diproses</a>
                                 </li>
                                 <li class="submenu-item mb-1">
-                                    <a href="#" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Disetujui</a>
+                                    <a href="#" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Selesai</a>
                                 </li>
                             </ul>
                         </div>
@@ -162,10 +162,10 @@
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.id %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal || 'N/A' %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.status %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar || 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center komentar-cell"><%= request.komentar_admin || '—' %>
                                             <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
@@ -260,8 +260,8 @@
                         window.location.href = '/admin/requests/diajukan';
                     } else if (this.textContent.trim() === 'Diproses') {
                         window.location.href = '/admin/requests/diproses';
-                    } else if (this.textContent.trim() === 'Disetujui') {
-                        window.location.href = '/admin/requests/disetujui';
+                    } else if (this.textContent.trim() === 'Selesai') {
+                        window.location.href = '/admin/requests/selesai';
                     }
                 });
 
