@@ -163,9 +163,9 @@
                         </thead>
                         <tbody class="table-body" id="tableBody">
                             <% if (requests && requests.length > 0) { %>
-                                <% requests.forEach(request => { %>
+                                <% requests.forEach((request, index) => { %>
                                     <tr>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.id %></td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= index + 1 %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
