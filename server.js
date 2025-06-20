@@ -5,7 +5,7 @@ const sequelize = require('./src/config/db');
 
 const userRoutes = require('./src/routes/userroute');
 const adminRoutes = require('./src/routes/adminroute');
-
+//test
 // Mengatur EJS sebagai view engine
 app.set('view engine', 'ejs');
 
