@@ -18,11 +18,15 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     username: DataTypes.STRING,
     password: DataTypes.STRING,
-   // Tambahan field jurusan
+    role: {
+      type: DataTypes.ENUM('user', 'admin'),
+      allowNull: false,
+      defaultValue: 'user'
+    },
   }, {
     sequelize,
     modelName: 'User',
-    tableName: 'user', // cocokkan dengan migration
+    tableName: 'user',
   });
   return User;
 };

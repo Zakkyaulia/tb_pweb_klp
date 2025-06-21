@@ -566,3 +566,21 @@ exports.generatePDFForDiajukan = async (req, res) => {
     }
 };
 
+exports.updateRequestComment = async (req, res) => {
+    const { id } = req.params;
+    const { komentar } = req.body;
+
+    try {
+        const request = await request_surat.findByPk(id);
+        if (request) {
+            await request.update({ komentar_admin: komentar });
+            res.status(200).json({ success: true, message: 'Komentar berhasil diperbarui.' });
+        } else {
+            res.status(404).json({ success: false, message: 'Permintaan tidak ditemukan.' });
+        }
+    } catch (error) {
+        console.error('Error updating comment:', error);
+        res.status(500).json({ success: false, message: 'Terjadi kesalahan pada server.' });
+    }
+};
+

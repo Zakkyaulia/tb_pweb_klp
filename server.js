@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const sequelize = require('./src/config/db');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 const userRoutes = require('./src/routes/userroute');
 const adminRoutes = require('./src/routes/adminroute');
@@ -19,13 +21,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routing ke halaman utama (opsional, arahkan ke default)
+// Middleware untuk session
+app.use(cookieParser());
+app.use(session({
+    secret: 'ini-adalah-secret-key-yang-sangat-rahasia', // Ganti dengan secret key yang lebih aman di production
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set ke true jika menggunakan HTTPS
+}));
+
+// Rute utama aplikasi
+// Rute untuk halaman "Diajukan" harus didefinisikan sebelum rute lain yang mungkin menangani "/"
 app.get('/', (req, res) => {
-  res.redirect('/admin/requests/diajukan'); // Arahkan ke halaman default "Diajukan"
+  res.redirect('/login');
 });
 
-// Route untuk API user
-app.use('/api/users', userRoutes);
+// Route untuk fungsionalitas user (seperti login)
+app.use('/', userRoutes);
 
 // Route untuk admin
 app.use('/admin', adminRoutes);

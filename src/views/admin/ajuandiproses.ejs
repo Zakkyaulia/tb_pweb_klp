@@ -129,7 +129,7 @@
                         <% if (requests && requests.length > 0) { %>
                             <% const startIdx = (page - 1) * 10 + 1; %>
                             <% requests.forEach((request, index) => { %>
-                                <tr>
+                                <tr data-request-id="<%= request.id %>">
                                     <td class="p-6 text-gray-700 text-sm text-center"><%= startIdx + index %></td>
                                     <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
                                     <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
@@ -240,23 +240,38 @@
                 alert('Terjadi kesalahan saat memperbarui status');
             }
         }
-        let selectedRow = null;
+        let selectedRequestId = null;
         function openKomentarModal(row) {
-            selectedRow = row;
+            selectedRequestId = row.dataset.requestId;
             const currentKomentar = row.querySelector('.komentar-cell').firstChild.textContent.trim();
             document.getElementById('komentarInput').value = currentKomentar === '—' ? '' : currentKomentar;
             document.getElementById('komentarModal').classList.remove('hidden');
         }
         function closeKomentarModal() {
             document.getElementById('komentarModal').classList.add('hidden');
-            selectedRow = null;
+            selectedRequestId = null;
         }
-        function simpanKomentar() {
+        async function simpanKomentar() {
+            if (!selectedRequestId) return;
+
             const komentar = document.getElementById('komentarInput').value.trim();
-            if (selectedRow) {
-                const komentarCell = selectedRow.querySelector('.komentar-cell');
-                komentarCell.firstChild.textContent = komentar || '—';
-                closeKomentarModal();
+
+            try {
+                const response = await fetch(`/admin/requests/comment/${selectedRequestId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ komentar: komentar })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    window.location.reload();
+                } else {
+                    alert('Gagal menyimpan komentar: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menyimpan komentar.');
             }
         }
     </script>

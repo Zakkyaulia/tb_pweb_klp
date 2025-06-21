@@ -4,6 +4,19 @@ const { request_surat } = require('../models');
 const adminController = require('../controllers/admincontroller');
 const userController = require('../controllers/usercontroller');
 
+// Middleware untuk memeriksa otentikasi
+const isAuthenticated = (req, res, next) => {
+    if (req.session.user && req.session.user.role === 'admin') {
+        // Jika user ada di session dan rolenya admin, lanjutkan
+        return next();
+    }
+    // Jika tidak, redirect ke halaman login
+    res.redirect('/login');
+};
+
+// Terapkan middleware ini ke semua rute di bawah ini
+router.use(isAuthenticated);
+
 router.get('/requests/diajukan', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -113,5 +126,8 @@ router.get('/requests/selesai/pdf', adminController.generatePDFForSelesai);
 
 // Route untuk generate PDF permintaan diajukan
 router.get('/requests/diajukan/pdf', adminController.generatePDFForDiajukan);
+
+// Route untuk memperbarui komentar
+router.post('/requests/comment/:id', adminController.updateRequestComment);
 
 module.exports = router;
