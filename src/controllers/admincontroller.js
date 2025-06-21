@@ -45,3 +45,62 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
+exports.getAllRequests = async (req, res) => {
+    try {
+        const { jenis_surat, tanggal } = req.query;
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+
+        // Buat filter query
+        const whereClause = {};
+        if (jenis_surat && jenis_surat !== 'Semua') {
+            whereClause.jenis_surat = jenis_surat;
+        }
+        if (tanggal) {
+            // Menggunakan fungsi DATE dari sequelize untuk membandingkan tanggal saja
+            whereClause.tanggal_request = request_surat.sequelize.where(
+                request_surat.sequelize.fn('DATE', request_surat.sequelize.col('tanggal_request')),
+                '=',
+                tanggal
+            );
+        }
+
+        // Ambil semua jenis surat yang unik untuk dropdown filter
+        const allJenisSurat = await request_surat.findAll({
+            attributes: [[request_surat.sequelize.fn('DISTINCT', request_surat.sequelize.col('jenis_surat')), 'jenis_surat']],
+            raw: true
+        }).then(results => results.map(r => r.jenis_surat));
+
+        // Ambil data yang difilter dengan paginasi
+        const { count, rows } = await request_surat.findAndCountAll({
+            where: whereClause,
+            limit: limit,
+            offset: offset,
+            order: [['tanggal_request', 'DESC']]
+        });
+
+        const totalPages = Math.ceil(count / limit) || 1;
+
+        res.render('admin/ajuansemua', {
+            requests: rows || [],
+            page: page,
+            totalPages: totalPages,
+            allJenisSurat: allJenisSurat,
+            currentFilters: { jenis_surat, tanggal },
+            query: req.query
+        });
+    } catch (error) {
+        console.error('Error fetching requests:', error);
+        res.status(500).render('admin/ajuansemua', { 
+            requests: [], 
+            error: 'Terjadi kesalahan saat mengambil data permintaan.',
+            allJenisSurat: [],
+            currentFilters: req.query,
+            page: 1,
+            totalPages: 1,
+            query: req.query
+        });
+    }
+};
+

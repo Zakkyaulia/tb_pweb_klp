@@ -231,5 +231,23 @@
                 content.classList.add('scale-100', 'opacity-100');
             }, 10);
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Beri sedikit jeda untuk memastikan skrip ini berjalan setelah skrip lain
+            setTimeout(() => {
+                const permintaanSubmenu = document.querySelector('.nav-submenu');
+                if (permintaanSubmenu && permintaanSubmenu.classList.contains('active')) {
+                    // Tutup submenu hanya jika sedang terbuka
+                    permintaanSubmenu.classList.remove('active');
+                    const submenuList = permintaanSubmenu.querySelector('.submenu-list');
+                    const chevron = permintaanSubmenu.querySelector('.submenu-header i');
+                    
+                    submenuList.style.maxHeight = '0';
+                    if (chevron) {
+                        chevron.style.transform = 'rotate(0deg)';
+                    }
+                }
+            }, 0); // Jeda 0 milidetik sudah cukup untuk memindahkannya ke akhir antrian eksekusi
+        });
     </script>
 <%- include('../partials/admin-footer') %> 

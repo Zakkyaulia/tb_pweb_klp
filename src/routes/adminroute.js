@@ -98,30 +98,7 @@ router.get('/kelola-pengguna', async (req, res) => {
     }
 });
 
-router.get('/requests/semua', async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = 10;
-        const offset = (page - 1) * limit;
-
-        const requests = await request_surat.findAll({
-            limit: limit,
-            offset: offset
-        });
-
-        const totalRequests = await request_surat.count();
-        const totalPages = Math.ceil(totalRequests / limit);
-
-        res.render('admin/ajuansemua', {
-            requests: requests || [],
-            page: page,
-            totalPages: totalPages
-        });
-    } catch (error) {
-        console.error('Error fetching requests:', error);
-        res.status(500).render('admin/ajuansemua', { requests: [], error: 'Error fetching requests' });
-    }
-});
+router.get('/requests/semua', adminController.getAllRequests);
 
 router.post('/requests/update/:id', adminController.updateRequestStatus);
 
