@@ -96,7 +96,13 @@
     <div class="main-content flex-1 p-6">
         <div class="main-header flex justify-between items-center mb-6">
             <h1 class="page-title text-3xl font-semibold text-white">Permintaan - Diproses</h1>
-            <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
+            <div class="flex items-center space-x-4">
+                <button onclick="generatePDF(event)" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ease-in-out flex items-center space-x-2">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Generate PDF</span>
+                </button>
+                <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
+            </div>
         </div>
         <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
             <div class="search-container mb-8 max-w-md">
@@ -172,6 +178,47 @@
         </div>
     </div>
     <script>
+        async function generatePDF(event) {
+            const button = event.currentTarget;
+            const originalContent = button.innerHTML;
+
+            try {
+                // Tampilkan loading indicator
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Generating PDF...</span>';
+                button.disabled = true;
+
+                const response = await fetch('/admin/requests/diproses/pdf', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `permintaan-diproses-${new Date().toISOString().split('T')[0]}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    alert('Gagal generate PDF');
+                }
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Terjadi kesalahan saat generate PDF');
+            } finally {
+                // Kembalikan button ke kondisi semula
+                if (button) {
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+                }
+            }
+        }
+
         async function updateStatus(selectElement, requestId) {
             const newStatus = selectElement.value;
             const row = selectElement.closest('tr');

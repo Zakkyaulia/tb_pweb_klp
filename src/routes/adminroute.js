@@ -105,4 +105,13 @@ router.post('/requests/update/:id', adminController.updateRequestStatus);
 // Route untuk menghapus user
 router.delete('/users/:user_id', adminController.deleteUser);
 
+// Route untuk generate PDF permintaan diproses
+router.get('/requests/diproses/pdf', adminController.generatePDFForDiproses);
+
+// Route untuk generate PDF permintaan selesai
+router.get('/requests/selesai/pdf', adminController.generatePDFForSelesai);
+
+// Route untuk generate PDF permintaan diajukan
+router.get('/requests/diajukan/pdf', adminController.generatePDFForDiajukan);
+
 module.exports = router;
