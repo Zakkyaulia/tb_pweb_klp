@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const sequelize = require('./src/config/db');
+const db = require('./src/models'); // Mengimpor dari models/index.js
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
@@ -43,7 +43,7 @@ app.use('/', userRoutes);
 app.use('/admin', adminRoutes);
 
 // Sinkronisasi model dengan database
-sequelize.sync({ force: false })
+db.sequelize.sync({ force: false })
   .then(() => console.log('Database dan model disinkronisasi'))
   .catch(err => console.log('Error sinkronisasi:', err));
 

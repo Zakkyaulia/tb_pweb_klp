@@ -18,7 +18,12 @@
                     <i class="fas fa-file-pdf"></i>
                     <span>Generate PDF</span>
                 </button>
-                <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
+                <div class="relative">
+                    <i id="user-menu-button" class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
+                    <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                        <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
@@ -158,6 +163,21 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userMenu = document.getElementById('user-menu');
+
+            userMenuButton.addEventListener('click', function(event) {
+                event.stopPropagation();
+                userMenu.classList.toggle('hidden');
+            });
+
+            // Sembunyikan menu jika klik di luar
+            window.addEventListener('click', function(event) {
+                if (!userMenu.classList.contains('hidden') && !userMenuButton.contains(event.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+
             const searchInput = document.getElementById('searchInput');
             searchInput.addEventListener('input', function(e) {
                 console.log('Mencari:', e.target.value);
