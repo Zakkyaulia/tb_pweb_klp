@@ -48,6 +48,17 @@ router.get('/kelola-pengguna', async (req, res) => {
     }
 });
 
+router.get('/requests/semua', async (req, res) => {
+    try {
+        const requests = await request_surat.findAll();
+        console.log('Requests semua:', requests);
+        res.render('admin/ajuansemua', { requests: requests || [] });
+    } catch (error) {
+        console.error('Error fetching requests:', error);
+        res.status(500).render('admin/ajuansemua', { requests: [], error: 'Error fetching requests' });
+    }
+});
+
 router.post('/requests/update/:id', adminController.updateRequestStatus);
 
 module.exports = router;
