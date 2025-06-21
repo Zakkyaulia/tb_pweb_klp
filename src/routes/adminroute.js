@@ -37,6 +37,17 @@ router.get('/requests/selesai', async (req, res) => {
     }
 });
 
+router.get('/requests/semua', async (req, res) => {
+    try {
+        const requests = await request_surat.findAll();
+        console.log('All requests:', requests);
+        res.render('admin/ajuansemua', { requests: requests || [] });
+    } catch (error) {
+        console.error('Error fetching all requests:', error);
+        res.status(500).render('admin/semua', { requests: [], error: 'Error fetching requests' });
+    }
+});
+
 router.get('/kelola-pengguna', async (req, res) => {
     try {
         const users = await userController.fetchAllUsers();

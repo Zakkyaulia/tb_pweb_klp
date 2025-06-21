@@ -13,15 +13,18 @@
         .logo-icon {
             background: linear-gradient(135deg, #059669, #047857);
         }
-        /* Hapus efek ::before dan gunakan hover sederhana */
-        .nav-link {
-            position: relative;
-            transition: all 0.3s ease;
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, rgba(5, 150, 105, 0.1), rgba(4, 120, 87, 0.1));
+            transition: width 0.3s ease;
         }
-        .nav-link:hover {
-            color: #047857; /* Ubah warna teks saat hover */
-            background-color: rgba(5, 150, 105, 0.1); /* Opsional: tambahkan latar belakang halus */
-            transform: translateX(4px); /* Efek geser kecil seperti yang ada di script */
+        .nav-link:hover::before {
+            width: 100%;
         }
         .submenu-link.active {
             background: linear-gradient(90deg, #f97316, #ea580c);
@@ -47,7 +50,7 @@
             transition: max-height 0.3s ease-in-out;
         }
         .nav-submenu.active .submenu-list {
-            max-height: 200px; /* Sesuaikan dengan tinggi maksimum submenu */
+            max-height: 250px;
         }
         .submenu-header i {
             transition: transform 0.3s ease-in-out;
@@ -79,7 +82,7 @@
             <nav>
                 <ul class="nav-menu list-none p-0 py-4">
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
+                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
                             <i class="fas fa-tachometer-alt w-5 mr-3 text-gray-600"></i>
                             Dashboard
                         </a>
@@ -98,31 +101,31 @@
                                     <a href="/admin/requests/diajukan" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Diajukan</a>
                                 </li>
                                 <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/diproses" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out active">Diproses</a>
+                                    <a href="/admin/requests/diproses" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Diproses</a>
                                 </li>
                                 <li class="submenu-item mb-1">
-                                    <a href="#" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Selesai</a>
+                                    <a href="/admin/requests/selesai" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Selesai</a>
                                 </li>
                                 <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/semua" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Semua</a>
+                                    <a href="/admin/requests/semua" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out active">Semua</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
+                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
                             <i class="fas fa-file-contract w-5 mr-3 text-gray-600"></i>
                             Template
                         </a>
                     </li>
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
+                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
                             <i class="fas fa-bullhorn w-5 mr-3 text-gray-600"></i>
                             Pengumuman
                         </a>
                     </li>
                     <li class="nav-item mb-1">
-                        <a href="/admin/kelola-pengguna" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
+                        <a href="/admin/kelola-pengguna" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-gray-900">
                             <i class="fas fa-users w-5 mr-3 text-gray-600"></i>
                             Kelola Pengguna
                         </a>
@@ -132,7 +135,7 @@
         </div>
         <div class="main-content flex-1 p-6">
             <div class="main-header flex justify-between items-center mb-6">
-                <h1 class="page-title text-3xl font-semibold text-white" id="pageTitle">Permintaan - Diproses</h1>
+                <h1 class="page-title text-3xl font-semibold text-white">Permintaan - Semua</h1>
                 <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
             </div>
             <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
@@ -172,6 +175,7 @@
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
                                         <td class="p-6 text-gray-700 text-sm text-center">
                                             <select class="status-dropdown w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" onchange="updateStatus(this, '<%= request.id %>')">
+                                                <option value="diajukan" <%= request.status === 'diajukan' ? 'selected' : '' %>>Diajukan</option>
                                                 <option value="diproses" <%= request.status === 'diproses' ? 'selected' : '' %>>Diproses</option>
                                                 <option value="selesai" <%= request.status === 'selesai' ? 'selected' : '' %>>Selesai</option>
                                             </select>
@@ -185,7 +189,7 @@
                             <% } else { %>
                                 <tr>
                                     <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
-                                        Tidak ada data permintaan yang diproses
+                                        Tidak ada data permintaan
                                     </td>
                                 </tr>
                             <% } %>
@@ -206,29 +210,6 @@
         </div>
     </div>
     <script>
-        async function updateStatus(selectElement, requestId) {
-            const newStatus = selectElement.value;
-            const row = selectElement.closest('tr');
-            try {
-                const response = await fetch(`/admin/requests/update/${requestId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: newStatus })
-                });
-                if (response.ok) {
-                    if (newStatus === 'selesai') {
-                        row.remove(); // Hapus dari tabel saat ini
-                        window.location.href = '/admin/requests/selesai'; // Arahkan ke halaman selesai
-                    }
-                } else {
-                    alert('Gagal memperbarui status');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan');
-            }
-        }
-
         let selectedRow = null;
 
         function openKomentarModal(row) {
@@ -264,6 +245,30 @@
             } else {
                 submenuList.style.maxHeight = '0';
                 chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        async function updateStatus(selectElement, requestId) {
+            const newStatus = selectElement.value;
+            const row = selectElement.closest('tr');
+            try {
+                const response = await fetch(`/admin/requests/update/${requestId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if (response.ok) {
+                    if (newStatus === 'diproses') {
+                        window.location.href = '/admin/requests/diproses';
+                    } else if (newStatus === 'selesai') {
+                        window.location.href = '/admin/requests/selesai';
+                    }
+                } else {
+                    alert('Gagal memperbarui status');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan');
             }
         }
 
