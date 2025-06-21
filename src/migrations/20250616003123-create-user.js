@@ -9,15 +9,27 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstName: {
+      nama: {
         type: Sequelize.STRING
       },
-      lastName: {
+      nim: {
+        type: Sequelize.STRING
+      },
+      jurusan: {
         type: Sequelize.STRING
       },
       email: {
         type: Sequelize.STRING
       },
+      username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -29,6 +41,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('user'); // <- pastikan konsisten dengan nama tabel
   }
 };

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Template Surat - SIPAS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Custom Alert Styles */
+    .alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      z-index: 1000;
+      transform: translateX(400px);
+      transition: transform 0.3s ease-in-out;
+      max-width: 350px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .alert.show {
+      transform: translateX(0);
+    }
+    
+    .alert-success {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+    
+    .alert-error {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+    
+    .alert-warning {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+    
+    .alert-info {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+  </style>
+</head>
+<body class="bg-green-700 font-sans">
+  <%- include('partials/header', { active: 'Template' }) %>
+  
+  <main class="max-w-6xl mx-auto mt-10 p-8 bg-white rounded-xl shadow mb-10">
+    <h2 class="text-xl font-bold text-white bg-orange-400 px-4 py-2 rounded-t-xl mb-6">
+      <i class="fas fa-file-alt mr-2"></i>Template Surat
+    </h2>
+    
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <%= error %>
+      </div>
+    <% } %>
+    
+    <div class="space-y-4">
+      <% if (daftarTemplate && daftarTemplate.length > 0) { %>
+        <% daftarTemplate.forEach(template => { %>
+          <div class="flex justify-between items-center border-b pb-3">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800">
+                <%= template.nama_lengkap %>
+              </h3>
+            </div>
+            <div>
+              <a href="/template/view/<%= template.surat_id %>" 
+                 target="_blank"
+                 class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                <i class="fas fa-eye mr-2"></i>Lihat Template
+              </a>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="text-center py-8 text-gray-500">
+          <i class="fas fa-file-alt text-4xl mb-4"></i>
+          <p>Tidak ada template yang tersedia</p>
+        </div>
+      <% } %>
+    </div>
+  </main>
+
+  <!-- Custom Alert Container -->
+  <div id="alertContainer"></div>
+
+  <script>
+    // Custom Alert Function
+    function showAlert(message, type = 'info') {
+      const alertContainer = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      
+      alertContainer.appendChild(alert);
+      
+      // Show alert
+      setTimeout(() => alert.classList.add('show'), 100);
+      
+      // Hide and remove alert
+      setTimeout(() => {
+        alert.classList.remove('show');
+        setTimeout(() => alertContainer.removeChild(alert), 300);
+      }, 3000);
+    }
+
+    // Show success message if exists
+    <% if (typeof success !== 'undefined' && success) { %>
+      showAlert('<%= success %>', 'success');
+    <% } %>
+  </script>
+</body>
+</html>
