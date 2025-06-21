@@ -60,135 +60,126 @@
                 transform: translateX(0);
             }
         }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+            align-items: center;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db; /* Border abu-abu untuk tombol tidak aktif */
+            background: #f3f4f6; /* Latar abu-abu untuk tombol tidak aktif */
+            color: #374151; /* Teks abu-abu untuk tombol tidak aktif */
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+        .pagination button:hover {
+            background: #e5e7eb;
+        }
+        .pagination button:disabled {
+            border: 1px solid #ea580c; /* Border oranye untuk tombol aktif */
+            background: white; /* Latar putih untuk tombol aktif */
+            color: #f97316; /* Teks oranye untuk tombol aktif */
+            cursor: not-allowed;
+            opacity: 1;
+        }
+        .page-info {
+            margin: 0 10px;
+            color: #f97316;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body class="font-sans bg-gray-50">
-    <div class="flex min-h-screen">
-        <div class="sidebar w-64 bg-white shadow-lg relative md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out">
-            <div class="sidebar-header p-5 border-b border-gray-200">
-                <div class="flex items-center gap-3">
-                    <div class="logo-icon w-8 h-8 rounded-full flex items-center justify-center text-white text-sm">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <div class="flex flex-col">
-                        <div class="university-name text-xs text-gray-700 font-medium">UNIVERSITAS ANDALAS</div>
-                        <div class="sipas-title text-2xl font-bold text-green-700">SIPAS</div>
-                    </div>
-                </div>
-            </div>
-            <nav>
-                <ul class="nav-menu list-none p-0 py-4">
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-tachometer-alt w-5 mr-3 text-gray-600"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-submenu">
-                            <div class="submenu-header flex items-center justify-between p-3 text-gray-700 cursor-pointer" onclick="toggleSubmenu(this)">
-                                <div class="flex items-center">
-                                    <i class="fas fa-file-alt w-5 mr-3 text-gray-600"></i>
-                                    Permintaan
-                                </div>
-                                <i class="fas fa-chevron-down text-xs text-gray-400"></i>
-                            </div>
-                            <ul class="submenu-list list-none ml-8">
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/diajukan" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Diajukan</a>
-                                </li>
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/diproses" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Diproses</a>
-                                </li>
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/selesai" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out active">Selesai</a>
-                                </li>
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/semua" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Semua</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-file-contract w-5 mr-3 text-gray-600"></i>
-                            Template
-                        </a>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-bullhorn w-5 mr-3 text-gray-600"></i>
-                            Pengumuman
-                        </a>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="/admin/kelola-pengguna" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-users w-5 mr-3 text-gray-600"></i>
-                            Kelola Pengguna
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+    <%- include('../partials/admin-header', {title: 'Permintaan Selesai'}) %>
+    <%- include('../partials/navbar') %>
+    <div class="main-content flex-1 p-6">
+        <div class="main-header flex justify-between items-center mb-6">
+            <h1 class="page-title text-3xl font-semibold text-white">Permintaan - Selesai</h1>
+            <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
         </div>
-        <div class="main-content flex-1 p-6">
-            <div class="main-header flex justify-between items-center mb-6">
-                <h1 class="page-title text-3xl font-semibold text-white" id="pageTitle">Permintaan - Selesai</h1>
-                <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
+        <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
+            <div class="search-container mb-8 max-w-md">
+                <div class="relative">
+                    <input type="text" placeholder="Cari" class="search-input w-full py-3 pl-10 pr-4 border-2 border-gray-200 rounded-lg text-sm outline-none focus:border-green-600 focus:ring-4 focus:ring-green-100 transition-colors duration-200 ease-in-out" id="searchInput">
+                    <i class="fas fa-search search-icon absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
             </div>
-            <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
-                <div class="search-container mb-8 max-w-md">
-                    <div class="relative">
-                        <input
-                            type="text"
-                            placeholder="Cari"
-                            class="search-input w-full py-3 pl-10 pr-4 border-2 border-gray-200 rounded-lg text-sm outline-none focus:border-green-600 focus:ring-4 focus:ring-green-100 transition-colors duration-200 ease-in-out"
-                            id="searchInput"
-                        >
-                        <i class="fas fa-search search-icon absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    </div>
-                </div>
-                <div class="table-container overflow-x-auto rounded-lg border border-gray-200">
-                    <table class="data-table w-full border-collapse">
-                        <thead class="table-header">
-                            <tr>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">No</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Nama</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">NIM</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Tanggal</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Jenis Surat</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Status</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">File Pengantar</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Komentar</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-body" id="tableBody">
-                            <% if (requests && requests.length > 0) { %>
-                                <% requests.forEach((request, index) => { %>
-                                    <tr>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= index + 1 %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.status %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.komentar_admin || '—' %></td>
-                                    </tr>
-                                <% }); %>
-                            <% } else { %>
+            <div class="table-container overflow-x-auto rounded-lg border border-gray-200">
+                <table class="data-table w-full border-collapse">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">No</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Nama</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">NIM</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Tanggal</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Jenis Surat</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Status</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">File Pengantar</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Komentar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body" id="tableBody">
+                        <% if (requests && requests.length > 0) { %>
+                            <% const startIdx = (page - 1) * 10; %>
+                            <% requests.forEach((request, index) => { %>
                                 <tr>
-                                    <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
-                                        Tidak ada data permintaan yang selesai
-                                    </td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= startIdx + index + 1 %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.status %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.komentar_admin || '' %></td>
                                 </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
+                                    Tidak ada data permintaan yang selesai
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <span class="page-info">Halaman <%= page %> dari <%= totalPages %></span>
+                <% if (totalPages > 0) { %>
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <button onclick="window.location.href='/admin/requests/selesai?page=<%= i %>'" <%- i === page ? 'disabled' : '' %>>
+                            <%= i %>
+                        </button>
+                    <% } %>
+                <% } %>
             </div>
         </div>
     </div>
+    </div>
+<%- include('../partials/admin-footer') %>
     <script>
+        // Fungsi untuk membuka dropdown Permintaan secara otomatis
+        function openPermintaanDropdown() {
+            const submenu = document.querySelector('.nav-submenu');
+            const submenuList = submenu.querySelector('.submenu-list');
+            const chevron = submenu.querySelector('.submenu-header i');
+            
+            // Buka dropdown
+            submenu.classList.add('active');
+            submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
+            chevron.style.transform = 'rotate(180deg)';
+            
+            // Tandai submenu "Selesai" sebagai aktif
+            const selesaiLink = submenu.querySelector('a[href="/admin/requests/selesai"]');
+            if (selesaiLink) {
+                selesaiLink.classList.add('active');
+            }
+        }
+
         function toggleSubmenu(header) {
             const submenu = header.parentElement;
             const submenuList = submenu.querySelector('.submenu-list');
@@ -252,6 +243,9 @@
                     }
                 });
             });
+
+            // Buka dropdown saat halaman dimuat
+            openPermintaanDropdown();
         });
     </script>
 </body>

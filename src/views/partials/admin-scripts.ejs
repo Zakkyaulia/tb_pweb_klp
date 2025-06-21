@@ -1,0 +1,41 @@
+<script>
+    function toggleSubmenu(header) {
+        const submenu = header.parentElement;
+        const submenuList = submenu.querySelector('.submenu-list');
+        const chevron = header.querySelector('i');
+
+        submenu.classList.toggle('active');
+
+        if (submenu.classList.contains('active')) {
+            submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
+            chevron.style.transform = 'rotate(180deg)';
+        } else {
+            submenuList.style.maxHeight = '0';
+            chevron.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    // Fungsi untuk membuka dropdown Permintaan secara otomatis
+    function openPermintaanDropdown() {
+        const submenu = document.querySelector('.nav-submenu');
+        const submenuList = submenu.querySelector('.submenu-list');
+        const chevron = submenu.querySelector('.submenu-header i');
+        
+        // Buka dropdown
+        submenu.classList.add('active');
+        submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
+        chevron.style.transform = 'rotate(180deg)';
+        
+        // Tandai submenu yang aktif berdasarkan URL saat ini
+        const currentPath = window.location.pathname;
+        const activeLink = submenu.querySelector(`a[href="${currentPath}"]`);
+        if (activeLink) {
+            activeLink.classList.add('active');
+        }
+    }
+
+    // Buka dropdown saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        openPermintaanDropdown();
+    });
+</script> 

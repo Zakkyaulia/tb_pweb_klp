@@ -1,0 +1,73 @@
+<style>
+    .sidebar-header {
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .logo-icon {
+        background: linear-gradient(135deg, #059669, #047857);
+    }
+    /* Hapus efek ::before dan gunakan hover sederhana */
+    .nav-link {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+        color: #047857; /* Ubah warna teks saat hover */
+        background-color: rgba(5, 150, 105, 0.1); /* Latar belakang halus opsional */
+    }
+    .submenu-link.active {
+        background: linear-gradient(90deg, #f97316, #ea580c);
+        color: white;
+        border-radius: 0 25px 25px 0;
+        margin-right: 16px;
+        font-weight: 500;
+    }
+    .submenu-link:hover {
+        background: linear-gradient(90deg, rgba(247, 115, 22, 0.1), rgba(234, 88, 12, 0.1));
+        color: #f97316;
+        transition: all 0.3s ease;
+    }
+    .main-content {
+        background: linear-gradient(135deg, #059669, #047857);
+    }
+    .table-header {
+        background: linear-gradient(90deg, #f97316, #ea580c);
+    }
+    .submenu-list {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+    .nav-submenu.active .submenu-list {
+        max-height: 200px;
+    }
+    .submenu-header i {
+        transition: transform 0.3s ease-in-out;
+    }
+    .nav-submenu.active .submenu-header i {
+        transform: rotate(180deg);
+    }
+    @media (max-width: 768px) {
+        .sidebar.open {
+            transform: translateX(0);
+        }
+    }
+    
+    /* Animasi untuk popup */
+    .modal-content {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .modal-backdrop {
+        transition: opacity 0.3s ease-in-out;
+    }
+    
+    /* Efek hover untuk tombol */
+    .btn-hover {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .btn-hover:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+</style> 

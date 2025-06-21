@@ -1,134 +1,5 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPAS - Kelola Pengguna</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .sidebar-header {
-            border-bottom: 1px solid #e5e5e5;
-        }
-        .logo-icon {
-            background: linear-gradient(135deg, #059669, #047857);
-        }
-        /* Hapus efek ::before dan gunakan hover sederhana */
-        .nav-link {
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        .nav-link:hover {
-            color: #047857; /* Ubah warna teks saat hover */
-            background-color: rgba(5, 150, 105, 0.1); /* Latar belakang halus opsional */
-        }
-        .submenu-link.active {
-            background: linear-gradient(90deg, #f97316, #ea580c);
-            color: white;
-            border-radius: 0 25px 25px 0;
-            margin-right: 16px;
-            font-weight: 500;
-        }
-        .submenu-link:hover {
-            background: linear-gradient(90deg, rgba(247, 115, 22, 0.1), rgba(234, 88, 12, 0.1));
-            color: #f97316;
-            transition: all 0.3s ease;
-        }
-        .main-content {
-            background: linear-gradient(135deg, #059669, #047857);
-        }
-        .table-header {
-            background: linear-gradient(90deg, #f97316, #ea580c);
-        }
-        .submenu-list {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out;
-        }
-        .nav-submenu.active .submenu-list {
-            max-height: 200px;
-        }
-        .submenu-header i {
-            transition: transform 0.3s ease-in-out;
-        }
-        .nav-submenu.active .submenu-header i {
-            transform: rotate(180deg);
-        }
-        @media (max-width: 768px) {
-            .sidebar.open {
-                transform: translateX(0);
-            }
-        }
-    </style>
-</head>
-<body class="font-sans bg-gray-50">
-    <div class="flex min-h-screen">
-        <div class="sidebar w-64 bg-white shadow-lg relative md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out">
-            <div class="sidebar-header p-5 border-b border-gray-200">
-                <div class="flex items-center gap-3">
-                    <div class="logo-icon w-8 h-8 rounded-full flex items-center justify-center text-white text-sm">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <div class="flex flex-col">
-                        <div class="university-name text-xs text-gray-700 font-medium">UNIVERSITAS ANDALAS</div>
-                        <div class="sipas-title text-2xl font-bold text-green-700">SIPAS</div>
-                    </div>
-                </div>
-            </div>
-            <nav>
-                <ul class="nav-menu list-none p-0 py-4">
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-tachometer-alt w-5 mr-3 text-gray-600"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-submenu">
-                            <div class="submenu-header flex items-center justify-between p-3 text-gray-700 cursor-pointer" onclick="toggleSubmenu(this)">
-                                <div class="flex items-center">
-                                    <i class="fas fa-file-alt w-5 mr-3 text-gray-600"></i>
-                                    Permintaan
-                                </div>
-                                <i class="fas fa-chevron-down text-xs text-gray-400"></i>
-                            </div>
-                            <ul class="submenu-list list-none ml-8">
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/diajukan" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Diajukan</a>
-                                </li>
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/diproses" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Diproses</a>
-                                </li>
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/selesai" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Selesai</a>
-                                </li>
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/semua" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Semua</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-file-contract w-5 mr-3 text-gray-600"></i>
-                            Template
-                        </a>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-bullhorn w-5 mr-3 text-gray-600"></i>
-                            Pengumuman
-                        </a>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="/admin/kelola-pengguna" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-users w-5 mr-3 text-gray-600"></i>
-                            Kelola Pengguna
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+<%- include('../partials/admin-header', {title: 'Kelola Pengguna'}) %>
+<%- include('../partials/navbar') %>
         <div class="main-content flex-1 p-6">
             <div class="main-header flex justify-between items-center mb-6">
                 <h1 class="page-title text-3xl font-semibold text-white">Kelola Pengguna</h1>
@@ -141,6 +12,7 @@
                             <th class="py-2 px-4">Nama</th>
                             <th class="py-2 px-4">NIM</th>
                             <th class="py-2 px-4">Jurusan</th>
+                            <th class="py-2 px-4">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -150,11 +22,20 @@
                                     <td class="py-2 px-4"><%= user.nama %></td>
                                     <td class="py-2 px-4"><%= user.nim %></td>
                                     <td class="py-2 px-4"><%= user.jurusan %></td>
+                                    <td class="py-2 px-4">
+                                        <button 
+                                            data-user-id="<%= user.user_id %>"
+                                            data-user-name="<%= user.nama %>"
+                                            onclick="confirmDelete(this)" 
+                                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200 btn-hover">
+                                            <i class="fas fa-trash mr-1"></i>Hapus
+                                        </button>
+                                    </td>
                                 </tr>
                             <% }); %>
                         <% } else { %>
                             <tr>
-                                <td colspan="3" class="py-2 px-4 text-center text-gray-500">Tidak ada data pengguna.</td>
+                                <td colspan="4" class="py-2 px-4 text-center text-gray-500">Tidak ada data pengguna.</td>
                             </tr>
                         <% } %>
                     </tbody>
@@ -162,22 +43,193 @@
             </div>
         </div>
     </div>
+
+    <!-- Popup Konfirmasi Hapus -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div class="flex items-center mb-4">
+                <div class="bg-red-100 rounded-full p-2 mr-3">
+                    <i class="fas fa-exclamation-triangle text-red-600"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Hapus</h3>
+            </div>
+            <p class="text-gray-600 mb-6" id="deleteMessage">
+                Apakah Anda yakin ingin menghapus user ini?
+            </p>
+            <div class="flex justify-end space-x-3">
+                <button 
+                    onclick="closeDeleteModal()" 
+                    class="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300 transition-colors duration-200 btn-hover">
+                    Batal
+                </button>
+                <button 
+                    id="confirmDeleteBtn"
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200 btn-hover">
+                    Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Sukses -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="successModalContent">
+            <div class="flex items-center mb-4">
+                <div class="bg-green-100 rounded-full p-3 mr-3">
+                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Berhasil!</h3>
+            </div>
+            <p class="text-gray-600 mb-6" id="successMessage">
+                User berhasil dihapus!
+            </p>
+            <div class="flex justify-end">
+                <button 
+                    onclick="closeSuccessModal()" 
+                    class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 font-medium btn-hover">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Error -->
+    <div id="errorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="errorModalContent">
+            <div class="flex items-center mb-4">
+                <div class="bg-red-100 rounded-full p-3 mr-3">
+                    <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Error!</h3>
+            </div>
+            <p class="text-gray-600 mb-6" id="errorMessage">
+                Terjadi kesalahan!
+            </p>
+            <div class="flex justify-end">
+                <button 
+                    onclick="closeErrorModal()" 
+                    class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 font-medium btn-hover">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function toggleSubmenu(header) {
-            const submenu = header.parentElement;
-            const submenuList = submenu.querySelector('.submenu-list');
-            const chevron = header.querySelector('i');
+        let currentUserId = null;
 
-            submenu.classList.toggle('active');
+        function confirmDelete(button) {
+            const userId = button.getAttribute('data-user-id');
+            const userName = button.getAttribute('data-user-name');
+            
+            currentUserId = userId;
+            
+            document.getElementById('deleteMessage').textContent = `Apakah Anda yakin ingin menghapus user "${userName}"?`;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
 
-            if (submenu.classList.contains('active')) {
-                submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
-                chevron.style.transform = 'rotate(180deg)';
-            } else {
-                submenuList.style.maxHeight = '0';
-                chevron.style.transform = 'rotate(0deg)';
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            currentUserId = null;
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            if (!currentUserId) return;
+
+            try {
+                console.log('Sending delete request for user ID:', currentUserId);
+                const response = await fetch(`/admin/users/${currentUserId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Response status:', response.status);
+                const result = await response.json();
+                console.log('Response result:', result);
+
+                if (result.success) {
+                    showSuccessModal('User berhasil dihapus!');
+                } else {
+                    showErrorModal('Gagal menghapus user: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showErrorModal('Terjadi kesalahan saat menghapus user: ' + error.message);
             }
+
+            closeDeleteModal();
+        });
+
+        // Tutup modal jika klik di luar modal
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+
+        // Tutup popup sukses jika klik di luar modal
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSuccessModal();
+            }
+        });
+
+        // Tutup popup error jika klik di luar modal
+        document.getElementById('errorModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeErrorModal();
+            }
+        });
+
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const content = document.getElementById('successModalContent');
+            
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                content.classList.remove('scale-95', 'opacity-0');
+                window.location.reload();
+            }, 300);
+        }
+
+        function closeErrorModal() {
+            const modal = document.getElementById('errorModal');
+            const content = document.getElementById('errorModalContent');
+            
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                content.classList.remove('scale-95', 'opacity-0');
+            }, 300);
+        }
+
+        function showSuccessModal(message) {
+            const modal = document.getElementById('successModal');
+            const content = document.getElementById('successModalContent');
+            
+            document.getElementById('successMessage').textContent = message;
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function showErrorModal(message) {
+            const modal = document.getElementById('errorModal');
+            const content = document.getElementById('errorModalContent');
+            
+            document.getElementById('errorMessage').textContent = message;
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
         }
     </script>
-</body>
-</html>
+<%- include('../partials/admin-footer') %> 

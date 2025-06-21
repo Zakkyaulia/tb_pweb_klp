@@ -6,9 +6,29 @@ const userController = require('../controllers/usercontroller');
 
 router.get('/requests/diajukan', async (req, res) => {
     try {
-        const requests = await request_surat.findAll({ where: { status: 'diajukan' } });
-        console.log('Requests diajukan:', requests);
-        res.render('admin/ajuandiajukan', { requests: requests || [] });
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+
+        const requests = await request_surat.findAll({
+            where: { status: 'diajukan' },
+            limit: limit,
+            offset: offset
+        });
+
+        const totalRequests = await request_surat.count({ where: { status: 'diajukan' } });
+        const totalPages = Math.ceil(totalRequests / limit);
+
+        console.log('Fetched requests:', requests.length);
+        console.log('Total requests:', totalRequests);
+        console.log('Total pages:', totalPages);
+        console.log('Current page:', page);
+
+        res.render('admin/ajuandiajukan', {
+            requests: requests || [],
+            page: page,
+            totalPages: totalPages
+        });
     } catch (error) {
         console.error('Error fetching requests:', error);
         res.status(500).render('admin/ajuandiajukan', { requests: [], error: 'Error fetching requests' });
@@ -17,9 +37,24 @@ router.get('/requests/diajukan', async (req, res) => {
 
 router.get('/requests/diproses', async (req, res) => {
     try {
-        const requests = await request_surat.findAll({ where: { status: 'diproses' } });
-        console.log('Requests diproses:', requests);
-        res.render('admin/ajuandiproses', { requests: requests || [] });
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+
+        const requests = await request_surat.findAll({
+            where: { status: 'diproses' },
+            limit: limit,
+            offset: offset
+        });
+
+        const totalRequests = await request_surat.count({ where: { status: 'diproses' } });
+        const totalPages = Math.ceil(totalRequests / limit);
+
+        res.render('admin/ajuandiproses', {
+            requests: requests || [],
+            page: page,
+            totalPages: totalPages
+        });
     } catch (error) {
         console.error('Error fetching requests:', error);
         res.status(500).render('admin/ajuandiproses', { requests: [], error: 'Error fetching requests' });
@@ -28,9 +63,24 @@ router.get('/requests/diproses', async (req, res) => {
 
 router.get('/requests/selesai', async (req, res) => {
     try {
-        const requests = await request_surat.findAll({ where: { status: 'selesai' } });
-        console.log('Requests selesai:', requests);
-        res.render('admin/ajuanselesai', { requests: requests || [] });
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+
+        const requests = await request_surat.findAll({
+            where: { status: 'selesai' },
+            limit: limit,
+            offset: offset
+        });
+
+        const totalRequests = await request_surat.count({ where: { status: 'selesai' } });
+        const totalPages = Math.ceil(totalRequests / limit);
+
+        res.render('admin/ajuanselesai', {
+            requests: requests || [],
+            page: page,
+            totalPages: totalPages
+        });
     } catch (error) {
         console.error('Error fetching requests:', error);
         res.status(500).render('admin/ajuanselesai', { requests: [], error: 'Error fetching requests' });
@@ -50,9 +100,23 @@ router.get('/kelola-pengguna', async (req, res) => {
 
 router.get('/requests/semua', async (req, res) => {
     try {
-        const requests = await request_surat.findAll();
-        console.log('Requests semua:', requests);
-        res.render('admin/ajuansemua', { requests: requests || [] });
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+
+        const requests = await request_surat.findAll({
+            limit: limit,
+            offset: offset
+        });
+
+        const totalRequests = await request_surat.count();
+        const totalPages = Math.ceil(totalRequests / limit);
+
+        res.render('admin/ajuansemua', {
+            requests: requests || [],
+            page: page,
+            totalPages: totalPages
+        });
     } catch (error) {
         console.error('Error fetching requests:', error);
         res.status(500).render('admin/ajuansemua', { requests: [], error: 'Error fetching requests' });
@@ -60,5 +124,8 @@ router.get('/requests/semua', async (req, res) => {
 });
 
 router.post('/requests/update/:id', adminController.updateRequestStatus);
+
+// Route untuk menghapus user
+router.delete('/users/:user_id', adminController.deleteUser);
 
 module.exports = router;

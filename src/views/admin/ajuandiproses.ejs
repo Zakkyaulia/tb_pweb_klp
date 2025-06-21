@@ -54,6 +54,35 @@
         .nav-submenu.active .submenu-header i {
             transform: rotate(180deg);
         }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+            align-items: center;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ea580c;
+            background: white;
+            color: #f97316;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .pagination button:hover {
+            background: #f97316;
+            color: white;
+        }
+        .pagination button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .page-info {
+            margin: 0 10px;
+            color: #f97316;
+            font-weight: 500;
+        }
         @media (max-width: 768px) {
             .sidebar.open {
                 transform: translateX(0);
@@ -62,138 +91,75 @@
     </style>
 </head>
 <body class="font-sans bg-gray-50">
-    <div class="flex min-h-screen">
-        <div class="sidebar w-64 bg-white shadow-lg relative md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out">
-            <div class="sidebar-header p-5 border-b border-gray-200">
-                <div class="flex items-center gap-3">
-                    <div class="logo-icon w-8 h-8 rounded-full flex items-center justify-center text-white text-sm">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <div class="flex flex-col">
-                        <div class="university-name text-xs text-gray-700 font-medium">UNIVERSITAS ANDALAS</div>
-                        <div class="sipas-title text-2xl font-bold text-green-700">SIPAS</div>
-                    </div>
-                </div>
-            </div>
-            <nav>
-                <ul class="nav-menu list-none p-0 py-4">
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-tachometer-alt w-5 mr-3 text-gray-600"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-submenu">
-                            <div class="submenu-header flex items-center justify-between p-3 text-gray-700 cursor-pointer" onclick="toggleSubmenu(this)">
-                                <div class="flex items-center">
-                                    <i class="fas fa-file-alt w-5 mr-3 text-gray-600"></i>
-                                    Permintaan
-                                </div>
-                                <i class="fas fa-chevron-down text-xs text-gray-400"></i>
-                            </div>
-                            <ul class="submenu-list list-none ml-8">
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/diajukan" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Diajukan</a>
-                                </li>
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/diproses" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out active">Diproses</a>
-                                </li>
-                                <li class="submenu-item mb-1">
-                                    <a href="#" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Selesai</a>
-                                </li>
-                                <li class="submenu-item mb-1">
-                                    <a href="/admin/requests/semua" class="submenu-link block py-2 px-5 text-gray-700 no-underline text-sm transition-colors duration-200 ease-in-out">Semua</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-file-contract w-5 mr-3 text-gray-600"></i>
-                            Template
-                        </a>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-bullhorn w-5 mr-3 text-gray-600"></i>
-                            Pengumuman
-                        </a>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="/admin/kelola-pengguna" class="nav-link flex items-center p-3 text-gray-700 no-underline transition-all duration-200 ease-in-out">
-                            <i class="fas fa-users w-5 mr-3 text-gray-600"></i>
-                            Kelola Pengguna
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+    <%- include('../partials/admin-header', {title: 'Permintaan Diproses'}) %>
+    <%- include('../partials/navbar') %>
+    <div class="main-content flex-1 p-6">
+        <div class="main-header flex justify-between items-center mb-6">
+            <h1 class="page-title text-3xl font-semibold text-white">Permintaan - Diproses</h1>
+            <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
         </div>
-        <div class="main-content flex-1 p-6">
-            <div class="main-header flex justify-between items-center mb-6">
-                <h1 class="page-title text-3xl font-semibold text-white" id="pageTitle">Permintaan - Diproses</h1>
-                <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
-            </div>
-            <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
-                <div class="search-container mb-8 max-w-md">
-                    <div class="relative">
-                        <input
-                            type="text"
-                            placeholder="Cari"
-                            class="search-input w-full py-3 pl-10 pr-4 border-2 border-gray-200 rounded-lg text-sm outline-none focus:border-green-600 focus:ring-4 focus:ring-green-100 transition-colors duration-200 ease-in-out"
-                            id="searchInput"
-                        >
-                        <i class="fas fa-search search-icon absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    </div>
+        <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
+            <div class="search-container mb-8 max-w-md">
+                <div class="relative">
+                    <input type="text" placeholder="Cari" class="search-input w-full py-3 pl-10 pr-4 border-2 border-gray-200 rounded-lg text-sm outline-none focus:border-green-600 focus:ring-4 focus:ring-green-100 transition-colors duration-200 ease-in-out" id="searchInput">
+                    <i class="fas fa-search search-icon absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 </div>
-                <div class="table-container overflow-x-auto rounded-lg border border-gray-200">
-                    <table class="data-table w-full border-collapse">
-                        <thead class="table-header">
-                            <tr>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">No</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Nama</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">NIM</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Tanggal</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Jenis Surat</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Status</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">File Pengantar</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Komentar</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-body" id="tableBody">
-                            <% if (requests && requests.length > 0) { %>
-                                <% requests.forEach((request, index) => { %>
-                                    <tr>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= index + 1 %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center">
-                                            <select class="status-dropdown w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" onchange="updateStatus(this, '<%= request.id %>')">
-                                                <option value="diproses" <%= request.status === 'diproses' ? 'selected' : '' %>>Diproses</option>
-                                                <option value="selesai" <%= request.status === 'selesai' ? 'selected' : '' %>>Selesai</option>
-                                            </select>
-                                        </td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center komentar-cell">
-                                            <%= request.komentar_admin || '—' %>
-                                            <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            <% } else { %>
+            </div>
+            <div class="table-container overflow-x-auto rounded-lg border border-gray-200">
+                <table class="data-table w-full border-collapse">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">No</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Nama</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">NIM</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Tanggal</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Jenis Surat</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Status</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">File Pengantar</th>
+                            <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Komentar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body" id="tableBody">
+                        <% if (requests && requests.length > 0) { %>
+                            <% const startIdx = (page - 1) * 10 + 1; %>
+                            <% requests.forEach((request, index) => { %>
                                 <tr>
-                                    <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
-                                        Tidak ada data permintaan yang diproses
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= startIdx + index %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center">
+                                        <select class="status-dropdown w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" onchange="updateStatus(this, '<%= request.id %>')">
+                                            <option value="diproses" <%= request.status === 'diproses' ? 'selected' : '' %>>Diproses</option>
+                                            <option value="selesai" <%= request.status === 'selesai' ? 'selected' : '' %>>Selesai</option>
+                                        </select>
+                                    </td>
+                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center komentar-cell">
+                                        <%= request.komentar_admin || '—' %>
+                                        <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
                                     </td>
                                 </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
+                                    Tidak ada data permintaan yang diproses
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <span class="page-info">Halaman <%= page %> dari <%= totalPages %></span>
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <button onclick="window.location.href='/admin/requests/diproses?page=<%= i %>'" <%= i === page ? 'disabled' : '' %>><%= i %></button>
+                <% } %>
             </div>
         </div>
+    </div>
     </div>
     <div id="komentarModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center hidden z-50">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-md">
@@ -215,34 +181,29 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: newStatus })
                 });
-                if (response.ok) {
-                    if (newStatus === 'selesai') {
-                        row.remove();
-                        window.location.href = '/admin/requests/selesai';
-                    }
+
+                const result = await response.json();
+                if (result.success) {
+                    window.location.reload();
                 } else {
                     alert('Gagal memperbarui status');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan');
+                alert('Terjadi kesalahan saat memperbarui status');
             }
         }
-
         let selectedRow = null;
-
         function openKomentarModal(row) {
             selectedRow = row;
             const currentKomentar = row.querySelector('.komentar-cell').firstChild.textContent.trim();
             document.getElementById('komentarInput').value = currentKomentar === '—' ? '' : currentKomentar;
             document.getElementById('komentarModal').classList.remove('hidden');
         }
-
         function closeKomentarModal() {
             document.getElementById('komentarModal').classList.add('hidden');
             selectedRow = null;
         }
-
         function simpanKomentar() {
             const komentar = document.getElementById('komentarInput').value.trim();
             if (selectedRow) {
@@ -251,71 +212,7 @@
                 closeKomentarModal();
             }
         }
-
-        function toggleSubmenu(header) {
-            const submenu = header.parentElement;
-            const submenuList = submenu.querySelector('.submenu-list');
-            const chevron = header.querySelector('i');
-
-            submenu.classList.toggle('active');
-
-            if (submenu.classList.contains('active')) {
-                submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
-                chevron.style.transform = 'rotate(180deg)';
-            } else {
-                submenuList.style.maxHeight = '0';
-                chevron.style.transform = 'rotate(0deg)';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', function(e) {
-                console.log('Mencari:', e.target.value);
-            });
-
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('mouseenter', function () {
-                    this.style.transform = 'translateX(4px)';
-                });
-                link.addEventListener('mouseleave', function () {
-                    this.style.transform = 'translateX(0)';
-                });
-            });
-
-            const submenuLinks = document.querySelectorAll('.submenu-link');
-            submenuLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    submenuLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    if (this.textContent.trim() === 'Diajukan') {
-                        window.location.href = '/admin/requests/diajukan';
-                    } else if (this.textContent.trim() === 'Diproses') {
-                        window.location.href = '/admin/requests/diproses';
-                    } else if (this.textContent.trim() === 'Selesai') {
-                        window.location.href = '/admin/requests/selesai';
-                    } else if (this.textContent.trim() === 'Semua') {
-                        window.location.href = '/admin/requests/semua';
-                    }
-                });
-
-                link.addEventListener('mouseenter', function () {
-                    if (!this.classList.contains('active')) {
-                        this.style.background = 'linear-gradient(90deg, rgba(247, 115, 22, 0.1), rgba(234, 88, 12, 0.1))';
-                        this.style.color = '#f97316';
-                    }
-                });
-
-                link.addEventListener('mouseleave', function () {
-                    if (!this.classList.contains('active')) {
-                        this.style.background = '';
-                        this.style.color = '';
-                    }
-                });
-            });
-        });
     </script>
+<%- include('../partials/admin-footer') %>
 </body>
 </html>
