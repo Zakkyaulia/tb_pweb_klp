@@ -1,159 +1,125 @@
 <%- include('../partials/admin-header', {title: 'Permintaan Semua'}) %>
-<style>
-    .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-        margin-top: 20px;
-        align-items: center;
-    }
-    .pagination button {
-        padding: 8px 12px;
-        border: 1px solid #d1d5db; /* Border abu-abu untuk tombol tidak aktif */
-        background: #f3f4f6; /* Latar abu-abu untuk tombol tidak aktif */
-        color: #374151; /* Teks abu-abu untuk tombol tidak aktif */
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background 0.3s, color 0.3s;
-    }
-    .pagination button:hover {
-        background: #e5e7eb;
-    }
-    .pagination button:disabled {
-        border: 1px solid #ea580c; /* Border oranye untuk tombol aktif */
-        background: white; /* Latar putih untuk tombol aktif */
-        color: #f97316; /* Teks oranye untuk tombol aktif */
-        cursor: not-allowed;
-        opacity: 1;
-    }
-    .page-info {
-        margin: 0 10px;
-        color: #f97316;
-        font-weight: 500;
-    }
-</style>
 <%- include('../partials/navbar') %>
-        <div class="main-content flex-1 p-6">
-            <div class="main-header flex justify-between items-center mb-6">
-                <h1 class="page-title text-3xl font-semibold text-white">Permintaan - Semua</h1>
-                <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
+<div class="main-content flex-1 p-6">
+    <div class="main-header flex justify-between items-center mb-6">
+        <h1 class="page-title text-3xl font-semibold text-white">Permintaan - Semua</h1>
+        <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
+    </div>
+    <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
+        <div class="search-container mb-8 max-w-md">
+            <div class="relative">
+                <input type="text" placeholder="Cari" class="search-input w-full py-3 pl-10 pr-4 border-2 border-gray-200 rounded-lg text-sm outline-none focus:border-green-600 focus:ring-4 focus:ring-green-100 transition-colors duration-200 ease-in-out" id="searchInput">
+                <i class="fas fa-search search-icon absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
             </div>
-            <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
-                <div class="search-container mb-8 max-w-md">
-                    <div class="relative">
-                        <input type="text" placeholder="Cari" class="search-input w-full py-3 pl-10 pr-4 border-2 border-gray-200 rounded-lg text-sm outline-none focus:border-green-600 focus:ring-4 focus:ring-green-100 transition-colors duration-200 ease-in-out" id="searchInput">
-                        <i class="fas fa-search search-icon absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    </div>
-                </div>
-                <div class="table-container overflow-x-auto rounded-lg border border-gray-200">
-                    <table class="data-table w-full border-collapse">
-                        <thead class="table-header">
+        </div>
+        <div class="table-container overflow-x-auto rounded-lg border border-gray-200">
+            <table class="data-table w-full border-collapse">
+                <thead class="table-header">
+                    <tr>
+                        <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">No</th>
+                        <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Nama</th>
+                        <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">NIM</th>
+                        <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Tanggal</th>
+                        <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Jenis Surat</th>
+                        <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Status</th>
+                        <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">File Pengantar</th>
+                        <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Komentar</th>
+                    </tr>
+                </thead>
+                <tbody class="table-body" id="tableBody">
+                    <% if (requests && requests.length > 0) { %>
+                        <% const startIdx = (page - 1) * 10 + 1; %>
+                        <% requests.forEach((request, index) => { %>
                             <tr>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">No</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Nama</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">NIM</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Tanggal</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Jenis Surat</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Status</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">File Pengantar</th>
-                                <th class="p-4 text-left text-sm font-semibold text-white tracking-wide">Komentar</th>
+                                <td class="p-6 text-gray-700 text-sm text-center"><%= startIdx + index %></td>
+                                <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
+                                <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
+                                <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
+                                <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
+                                <td class="p-6 text-gray-700 text-sm text-center">
+                                    <select class="status-dropdown w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" onchange="updateStatus(this, '<%= request.id %>')">
+                                        <option value="diajukan" <%= request.status === 'diajukan' ? 'selected' : '' %>>Diajukan</option>
+                                        <option value="diproses" <%= request.status === 'diproses' ? 'selected' : '' %>>Diproses</option>
+                                        <option value="selesai" <%= request.status === 'selesai' ? 'selected' : '' %>>Selesai</option>
+                                    </select>
+                                </td>
+                                <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
+                                <td class="p-6 text-gray-700 text-sm text-center komentar-cell"><%= request.komentar_admin || '' %>
+                                    <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody class="table-body" id="tableBody">
-                            <% if (requests && requests.length > 0) { %>
-                                <% const startIdx = (page - 1) * 10 + 1; %>
-                                <% requests.forEach((request, index) => { %>
-                                    <tr>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= startIdx + index %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nama || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.nim || 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.tanggal_request ? new Date(request.tanggal_request).toLocaleDateString('en-GB').split('/').reverse().join('/') : 'N/A' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.jenis_surat %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center">
-                                            <select class="status-dropdown w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" onchange="updateStatus(this, '<%= request.id %>')">
-                                                <option value="diajukan" <%= request.status === 'diajukan' ? 'selected' : '' %>>Diajukan</option>
-                                                <option value="diproses" <%= request.status === 'diproses' ? 'selected' : '' %>>Diproses</option>
-                                                <option value="selesai" <%= request.status === 'selesai' ? 'selected' : '' %>>Selesai</option>
-                                            </select>
-                                        </td>
-                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center komentar-cell"><%= request.komentar_admin || '' %>
-                                            <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
-                                        Tidak ada data permintaan
-                                    </td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="pagination">
-                    <span class="page-info">Halaman <%= page %> dari <%= totalPages %></span>
-                    <% if (totalPages > 0) { %>
-                        <% for (let i = 1; i <= totalPages; i++) { %>
-                            <button onclick="window.location.href='/admin/requests/semua?page=<%= i %>'" <%- i === page ? 'disabled' : '' %>>
-                                <%= i %>
-                            </button>
-                        <% } %>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9" class="empty-state p-6 text-gray-500 text-center italic">
+                                Tidak ada data permintaan
+                            </td>
+                        </tr>
                     <% } %>
-                </div>
-            </div>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <span class="page-info">Halaman <%= page %> dari <%= totalPages %></span>
+            <% if (totalPages > 0) { %>
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <button onclick="window.location.href='/admin/requests/semua?page=<%= i %>'" <%- i === page ? 'disabled' : '' %>>
+                        <%= i %>
+                    </button>
+                <% } %>
+            <% } %>
         </div>
     </div>
-    <div id="komentarModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-md">
-            <h2 class="text-xl font-semibold mb-4">Tambahkan Komentar</h2>
-            <textarea id="komentarInput" rows="4" class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Tulis komentar di sini..."></textarea>
-            <div class="flex justify-end mt-4 gap-3">
-                <button onclick="closeKomentarModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded">Batal</button>
-                <button onclick="simpanKomentar()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Simpan</button>
-            </div>
+</div>
+<div id="komentarModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-md">
+        <h2 class="text-xl font-semibold mb-4">Tambahkan Komentar</h2>
+        <textarea id="komentarInput" rows="4" class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Tulis komentar di sini..."></textarea>
+        <div class="flex justify-end mt-4 gap-3">
+            <button onclick="closeKomentarModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded">Batal</button>
+            <button onclick="simpanKomentar()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Simpan</button>
         </div>
     </div>
-    <script>
-        async function updateStatus(selectElement, requestId) {
-            const newStatus = selectElement.value;
-            const row = selectElement.closest('tr');
-            try {
-                const response = await fetch(`/admin/requests/update/${requestId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: newStatus })
-                });
+</div>
+<script>
+    async function updateStatus(selectElement, requestId) {
+        const newStatus = selectElement.value;
+        const row = selectElement.closest('tr');
+        try {
+            const response = await fetch(`/admin/requests/update/${requestId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
 
-                const result = await response.json();
-                if (result.success) {
-                    window.location.reload();
-                } else {
-                    alert('Gagal memperbarui status');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat memperbarui status');
+            const result = await response.json();
+            if (result.success) {
+                window.location.reload();
+            } else {
+                alert('Gagal memperbarui status');
             }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memperbarui status');
         }
-        let selectedRow = null;
-        function openKomentarModal(row) {
-            selectedRow = row;
-            const currentKomentar = row.querySelector('.komentar-cell').innerText;
-            document.getElementById('komentarInput').value = currentKomentar === '—' ? '' : currentKomentar;
-            document.getElementById('komentarModal').classList.remove('hidden');
+    }
+    let selectedRow = null;
+    function openKomentarModal(row) {
+        selectedRow = row;
+        const currentKomentar = row.querySelector('.komentar-cell').innerText;
+        document.getElementById('komentarInput').value = currentKomentar === '—' ? '' : currentKomentar;
+        document.getElementById('komentarModal').classList.remove('hidden');
+    }
+    function closeKomentarModal() {
+        document.getElementById('komentarModal').classList.add('hidden');
+        selectedRow = null;
+    }
+    function simpanKomentar() {
+        const komentar = document.getElementById('komentarInput').value.trim();
+        if (selectedRow) {
+            selectedRow.querySelector('.komentar-cell').innerText = komentar || '—';
         }
-        function closeKomentarModal() {
-            document.getElementById('komentarModal').classList.add('hidden');
-            selectedRow = null;
-        }
-        function simpanKomentar() {
-            const komentar = document.getElementById('komentarInput').value.trim();
-            if (selectedRow) {
-                selectedRow.querySelector('.komentar-cell').innerText = komentar || '—';
-            }
-            closeKomentarModal();
-        }
-    </script>
+        closeKomentarModal();
+    }
+</script>
 <%- include('../partials/admin-footer') %> 
