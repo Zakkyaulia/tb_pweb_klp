@@ -24,6 +24,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      jurusan: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       jenis_surat: {
         type: Sequelize.STRING,
         allowNull: false

@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    jurusan: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     jenis_surat: DataTypes.STRING,
     tanggal_request: DataTypes.DATE,
     status: {

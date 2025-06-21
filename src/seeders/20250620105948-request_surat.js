@@ -8,6 +8,7 @@ module.exports = {
         user_id: 4, // fahri
         nama: 'fahri',
         nim: '2004',
+        jurusan: 'Informatika',
         jenis_surat: 'SKAK',
         tanggal_request: new Date('2025-06-04 17:53:25'),
         status: 'diajukan',
@@ -20,6 +21,7 @@ module.exports = {
         user_id: 1, // dimas
         nama: 'dimas',
         nim: '2001',
+        jurusan: 'Sistem Informasi',
         jenis_surat: 'SKAK',
         tanggal_request: new Date('2025-06-05 09:15:00'),
         status: 'diproses',
@@ -32,6 +34,7 @@ module.exports = {
         user_id: 2, // ningsih
         nama: 'ningsih',
         nim: '2002',
+        jurusan: 'Teknik Elektro',
         jenis_surat: 'SBSS',
         tanggal_request: new Date('2025-06-06 14:30:00'),
         status: 'selesai',
@@ -44,6 +47,7 @@ module.exports = {
         user_id: 3, // zakky
         nama: 'zakky',
         nim: '2003',
+        jurusan: 'Matematika',
         jenis_surat: 'SKL',
         tanggal_request: new Date('2025-06-07 16:45:00'),
         status: 'diajukan',
@@ -56,6 +60,7 @@ module.exports = {
         user_id: 5, // rani
         nama: 'rani',
         nim: '2005',
+        jurusan: 'Kimia',
         jenis_surat: 'SKAK',
         tanggal_request: new Date('2025-06-08 10:20:00'),
         status: 'diproses',
