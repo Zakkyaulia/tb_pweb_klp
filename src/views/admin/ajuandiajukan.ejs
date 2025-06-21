@@ -180,9 +180,7 @@
                                             </select>
                                         </td>
                                         <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
-                                        <td class="p-6 text-gray-700 text-sm text-center komentar-cell"><%= request.komentar_admin || '—' %>
-                                            <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
-                                        </td>
+                                        <td class="p-6 text-gray-700 text-sm text-center"><%= request.komentar_admin || '—' %></td>
                                     </tr>
                                 <% }); %>
                             <% } else { %>
@@ -198,39 +196,7 @@
             </div>
         </div>
     </div>
-    <div id="komentarModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-md">
-            <h2 class="text-xl font-semibold mb-4">Tambahkan Komentar</h2>
-            <textarea id="komentarInput" rows="4" class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Tulis komentar di sini..."></textarea>
-            <div class="flex justify-end mt-4 gap-3">
-                <button onclick="closeKomentarModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded">Batal</button>
-                <button onclick="simpanKomentar()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Simpan</button>
-            </div>
-        </div>
-    </div>
     <script>
-        let selectedRow = null;
-
-        function openKomentarModal(row) {
-            selectedRow = row;
-            const currentKomentar = row.querySelector('.komentar-cell').innerText;
-            document.getElementById('komentarInput').value = currentKomentar === '—' ? '' : currentKomentar;
-            document.getElementById('komentarModal').classList.remove('hidden');
-        }
-
-        function closeKomentarModal() {
-            document.getElementById('komentarModal').classList.add('hidden');
-            selectedRow = null;
-        }
-
-        function simpanKomentar() {
-            const komentar = document.getElementById('komentarInput').value.trim();
-            if (selectedRow) {
-                selectedRow.querySelector('.komentar-cell').innerText = komentar || '—';
-            }
-            closeKomentarModal();
-        }
-
         function toggleSubmenu(header) {
             const submenu = header.parentElement;
             const submenuList = submenu.querySelector('.submenu-list');
@@ -298,7 +264,7 @@
                         window.location.href = '/admin/requests/diproses';
                     } else if (this.textContent.trim() === 'Selesai') {
                         window.location.href = '/admin/requests/selesai';
-                    }else if (this.textContent.trim() === 'Semua') {
+                    } else if (this.textContent.trim() === 'Semua') {
                         window.location.href = '/admin/requests/semua';
                     }
                 });
