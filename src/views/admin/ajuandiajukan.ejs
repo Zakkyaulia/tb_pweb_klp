@@ -101,16 +101,11 @@
         <div class="main-header flex justify-between items-center mb-6">
             <h1 class="page-title text-3xl font-semibold text-white">Permintaan - Diajukan</h1>
             <div class="flex items-center space-x-4">
-                <button onclick="generatePDF(event)" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ease-in-out flex items-center space-x-2">
+                <button onclick="generatePDFDiajukan(event)" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ease-in-out flex items-center space-x-2">
                     <i class="fas fa-file-pdf"></i>
                     <span>Generate PDF</span>
                 </button>
-                <div class="relative">
-                    <i id="user-menu-button" class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100"></i>
-                    <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                        <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
-                    </div>
-                </div>
+                <%- include('../partials/_user-menu') %>
             </div>
         </div>
         <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
@@ -155,7 +150,15 @@
                                             <option value="diproses" <%= request.status === 'diproses' ? 'selected' : '' %>>Diproses</option>
                                         </select>
                                     </td>
-                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center">
+                                        <% if (request.file_pengantar) { %>
+                                            <a href="/uploads/<%= request.file_pengantar %>" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200">
+                                                Lihat File
+                                            </a>
+                                        <% } else { %>
+                                            <span class="text-gray-400 italic">Tidak Ada</span>
+                                        <% } %>
+                                    </td>
                                     <td class="p-6 text-gray-700 text-sm text-center"><%= request.komentar_admin || '' %></td>
                                 </tr>
                             <% }); %>
@@ -178,86 +181,8 @@
         </div>
     </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const userMenuButton = document.getElementById('user-menu-button');
-            const userMenu = document.getElementById('user-menu');
-
-            userMenuButton.addEventListener('click', function(event) {
-                event.stopPropagation();
-                userMenu.classList.toggle('hidden');
-            });
-
-            // Sembunyikan menu jika klik di luar
-            window.addEventListener('click', function(event) {
-                if (!userMenu.classList.contains('hidden') && !userMenuButton.contains(event.target)) {
-                    userMenu.classList.add('hidden');
-                }
-            });
-        });
-
-        async function generatePDF(event) {
-            const button = event.currentTarget;
-            const originalContent = button.innerHTML;
-
-            try {
-                // Tampilkan loading indicator
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Generating PDF...</span>';
-                button.disabled = true;
-
-                const response = await fetch('/admin/requests/diajukan/pdf', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `permintaan-diajukan-${new Date().toISOString().split('T')[0]}.pdf`;
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                } else {
-                    alert('Gagal generate PDF');
-                }
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert('Terjadi kesalahan saat generate PDF');
-            } finally {
-                // Kembalikan button ke kondisi semula
-                if (button) {
-                    button.innerHTML = originalContent;
-                    button.disabled = false;
-                }
-            }
-        }
-        async function updateStatus(selectElement, requestId) {
-            const newStatus = selectElement.value;
-            const row = selectElement.closest('tr');
-            try {
-                const response = await fetch(`/admin/requests/update/${requestId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: newStatus })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    window.location.reload();
-                } else {
-                    alert('Gagal memperbarui status');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat memperbarui status');
-            }
-        }
-    </script>
+    <script src="/javascript/common.js"></script>
+    <script src="/javascript/ajuandiajukan.js"></script>
 <%- include('../partials/admin-footer') %>
 </body>
 </html>

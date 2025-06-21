@@ -3,16 +3,7 @@ const router = express.Router();
 const { request_surat } = require('../models');
 const adminController = require('../controllers/admincontroller');
 const userController = require('../controllers/usercontroller');
-
-// Middleware untuk memeriksa otentikasi
-const isAuthenticated = (req, res, next) => {
-    if (req.session.user && req.session.user.role === 'admin') {
-        // Jika user ada di session dan rolenya admin, lanjutkan
-        return next();
-    }
-    // Jika tidak, redirect ke halaman login
-    res.redirect('/login');
-};
+const { isAuthenticated } = require('../middleware/auth');
 
 // Terapkan middleware ini ke semua rute di bawah ini
 router.use(isAuthenticated);

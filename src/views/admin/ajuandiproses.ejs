@@ -97,7 +97,7 @@
         <div class="main-header flex justify-between items-center mb-6">
             <h1 class="page-title text-3xl font-semibold text-white">Permintaan - Diproses</h1>
             <div class="flex items-center space-x-4">
-                <button onclick="generatePDF(event)" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ease-in-out flex items-center space-x-2">
+                <button onclick="generatePDFDiproses(event)" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ease-in-out flex items-center space-x-2">
                     <i class="fas fa-file-pdf"></i>
                     <span>Generate PDF</span>
                 </button>
@@ -146,9 +146,17 @@
                                             <option value="selesai" <%= request.status === 'selesai' ? 'selected' : '' %>>Selesai</option>
                                         </select>
                                     </td>
-                                    <td class="p-6 text-gray-700 text-sm text-center"><%= request.file_pengantar ? 'Lengkap' : 'Tidak Lengkap' %></td>
+                                    <td class="p-6 text-gray-700 text-sm text-center">
+                                        <% if (request.file_pengantar) { %>
+                                            <a href="/uploads/<%= request.file_pengantar %>" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200">
+                                                Lihat File
+                                            </a>
+                                        <% } else { %>
+                                            <span class="text-gray-400 italic">Tidak Ada</span>
+                                        <% } %>
+                                    </td>
                                     <td class="p-6 text-gray-700 text-sm text-center komentar-cell">
-                                        <%= request.komentar_admin || '' %>
+                                        <%= request.komentar_admin || '—' %>
                                         <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
                                     </td>
                                 </tr>
@@ -182,120 +190,8 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const userMenuButton = document.getElementById('user-menu-button');
-            const userMenu = document.getElementById('user-menu');
-
-            userMenuButton.addEventListener('click', function(event) {
-                event.stopPropagation();
-                userMenu.classList.toggle('hidden');
-            });
-
-            // Sembunyikan menu jika klik di luar
-            window.addEventListener('click', function(event) {
-                if (!userMenu.classList.contains('hidden') && !userMenuButton.contains(event.target)) {
-                    userMenu.classList.add('hidden');
-                }
-            });
-        });
-        async function generatePDF(event) {
-            const button = event.currentTarget;
-            const originalContent = button.innerHTML;
-
-            try {
-                // Tampilkan loading indicator
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Generating PDF...</span>';
-                button.disabled = true;
-
-                const response = await fetch('/admin/requests/diproses/pdf', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `permintaan-diproses-${new Date().toISOString().split('T')[0]}.pdf`;
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                } else {
-                    alert('Gagal generate PDF');
-                }
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert('Terjadi kesalahan saat generate PDF');
-            } finally {
-                // Kembalikan button ke kondisi semula
-                if (button) {
-                    button.innerHTML = originalContent;
-                    button.disabled = false;
-                }
-            }
-        }
-
-        async function updateStatus(selectElement, requestId) {
-            const newStatus = selectElement.value;
-            const row = selectElement.closest('tr');
-            try {
-                const response = await fetch(`/admin/requests/update/${requestId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: newStatus })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    window.location.reload();
-                } else {
-                    alert('Gagal memperbarui status');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat memperbarui status');
-            }
-        }
-        let selectedRequestId = null;
-        function openKomentarModal(row) {
-            selectedRequestId = row.dataset.requestId;
-            const currentKomentar = row.querySelector('.komentar-cell').firstChild.textContent.trim();
-            document.getElementById('komentarInput').value = currentKomentar === '—' ? '' : currentKomentar;
-            document.getElementById('komentarModal').classList.remove('hidden');
-        }
-        function closeKomentarModal() {
-            document.getElementById('komentarModal').classList.add('hidden');
-            selectedRequestId = null;
-        }
-        async function simpanKomentar() {
-            if (!selectedRequestId) return;
-
-            const komentar = document.getElementById('komentarInput').value.trim();
-
-            try {
-                const response = await fetch(`/admin/requests/comment/${selectedRequestId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ komentar: komentar })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    window.location.reload();
-                } else {
-                    alert('Gagal menyimpan komentar: ' + result.message);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat menyimpan komentar.');
-            }
-        }
-    </script>
+    <script src="/javascript/common.js"></script>
+    <script src="/javascript/ajuandiproses.js"></script>
 <%- include('../partials/admin-footer') %>
 </body>
 </html>

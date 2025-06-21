@@ -5,9 +5,10 @@ const db = require('./src/models'); // Mengimpor dari models/index.js
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
-const userRoutes = require('./src/routes/userroute');
 const adminRoutes = require('./src/routes/adminroute');
-//test
+const userRoutes = require('./src/routes/userroute');
+const authRoutes = require('./src/routes/authroute'); // Impor rute otentikasi
+
 // Mengatur EJS sebagai view engine
 app.set('view engine', 'ejs');
 
@@ -16,6 +17,8 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 
 // Melayani file statis dari folder 'public'
 app.use(express.static(path.join(__dirname, 'public')));
+// Secara spesifik melayani file dari folder 'uploads' di root
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware untuk parsing JSON dan form data
 app.use(express.json());
@@ -36,11 +39,10 @@ app.get('/', (req, res) => {
   res.redirect('/login');
 });
 
-// Route untuk fungsionalitas user (seperti login)
-app.use('/', userRoutes);
-
-// Route untuk admin
+// Gunakan Rute
+app.use('/', authRoutes); // Gunakan rute otentikasi untuk path dasar
 app.use('/admin', adminRoutes);
+app.use('/users', userRoutes); // Gunakan rute pengguna di bawah '/users'
 
 // Sinkronisasi model dengan database
 db.sequelize.sync({ force: false })
