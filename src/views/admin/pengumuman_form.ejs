@@ -1,16 +1,52 @@
 <%- include('../partials/admin-header', { title: 'Tambah Pengumuman' }) %>
 <%- include('../partials/navbar') %>
 
+<style>
+  .modal-overlay {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .modal-content {
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideIn {
+    from { 
+      opacity: 0; 
+      transform: scale(0.8) translateY(-20px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: scale(1) translateY(0); 
+    }
+  }
+  
+  .check-icon {
+    animation: checkBounce 0.6s ease-out 0.3s both;
+  }
+  
+  @keyframes checkBounce {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+</style>
+
 <% if (success) { %>
-<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg shadow-lg p-8 w-[400px] text-center">
+<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 modal-overlay">
+  <div class="bg-white rounded-lg shadow-lg p-8 w-[400px] text-center modal-content">
     <div class="flex justify-center items-center mb-4">
       <div class="w-20 h-20 border-4 border-orange-400 rounded-full flex items-center justify-center">
-        <i class="fas fa-check text-4xl text-orange-500"></i>
+        <i class="fas fa-check text-4xl text-orange-500 check-icon"></i>
       </div>
     </div>
     <p class="text-gray-800 text-lg font-medium mb-6">Pengumuman berhasil di upload!</p>
-    <button onclick="window.location.href='/admin/pengumuman'" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+    <button onclick="window.location.href='/admin/pengumuman'" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors duration-200">
       Selesai
     </button>
   </div>
@@ -46,4 +82,27 @@
 </div>
 
 <script src="/javascript/common.js"></script>
+
+<script>
+// Fungsi untuk menutup modal sukses
+function closeSuccessModal() {
+  window.location.href = '/admin/pengumuman';
+}
+
+// Event listener untuk menutup modal dengan Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    closeSuccessModal();
+  }
+});
+
+// Event listener untuk menutup modal dengan klik di luar modal
+document.addEventListener('click', function(event) {
+  const modal = document.querySelector('.modal-overlay');
+  if (event.target === modal) {
+    closeSuccessModal();
+  }
+});
+</script>
+
 <%- include('../partials/admin-footer') %>

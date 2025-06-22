@@ -1,201 +1,245 @@
 <%- include('../partials/admin-header', {title: 'Kelola Pengguna'}) %>
 <%- include('../partials/navbar') %>
-        <div class="main-content flex-1 p-6">
-            <div class="main-header flex justify-between items-center mb-6">
-                <h1 class="page-title text-3xl font-semibold text-white">Kelola Pengguna</h1>
-                <%- include('../partials/_user-menu') %>
-            </div>
-            <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
-                <table class="min-w-full text-left border-collapse">
-                    <thead class="table-header text-white">
-                        <tr>
-                            <th class="py-2 px-4">Nama</th>
-                            <th class="py-2 px-4">NIM</th>
-                            <th class="py-2 px-4">Jurusan</th>
-                            <th class="py-2 px-4">Aksi</th>
+
+<style>
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; transform: scale(0.95); }
+    }
+    .animate-fade-out {
+        animation: fadeOut 0.5s ease-out forwards;
+    }
+</style>
+
+<div class="main-content flex-1 p-6">
+    <div class="main-header flex justify-between items-center mb-6">
+        <h1 class="page-title text-3xl font-semibold text-white">Kelola Pengguna</h1>
+        <%- include('../partials/_user-menu') %>
+    </div>
+    <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
+        <table class="min-w-full text-left border-collapse">
+            <thead class="table-header text-white">
+                <tr>
+                    <th class="py-2 px-4">Nama</th>
+                    <th class="py-2 px-4">NIM</th>
+                    <th class="py-2 px-4">Jurusan</th>
+                    <th class="py-2 px-4">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (users.length > 0) { %>
+                    <% users.forEach(user => { %>
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-2 px-4"><%= user.nama %></td>
+                            <td class="py-2 px-4"><%= user.nim %></td>
+                            <td class="py-2 px-4"><%= user.jurusan %></td>
+                            <td class="py-2 px-4">
+                                <% if (user.role !== 'admin') { %>
+                                    <button 
+                                        data-user-id="<%= user.user_id %>"
+                                        data-user-name="<%= user.nama %>"
+                                        onclick="confirmDelete(this)" 
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200 btn-hover">
+                                        <i class="fas fa-trash mr-1"></i>Hapus
+                                    </button>
+                                <% } %>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <% if (users.length > 0) { %>
-                            <% users.forEach(user => { %>
-                                <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                    <td class="py-2 px-4"><%= user.nama %></td>
-                                    <td class="py-2 px-4"><%= user.nim %></td>
-                                    <td class="py-2 px-4"><%= user.jurusan %></td>
-                                    <td class="py-2 px-4">
-                                        <% if (user.role !== 'admin') { %>
-                                            <button 
-                                                data-user-id="<%= user.user_id %>"
-                                                data-user-name="<%= user.nama %>"
-                                                onclick="confirmDelete(this)" 
-                                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200 btn-hover">
-                                                <i class="fas fa-trash mr-1"></i>Hapus
-                                            </button>
-                                        <% } %>
-                                    </td>
-                                </tr>
-                            <% }); %>
-                        <% } else { %>
-                            <tr>
-                                <td colspan="4" class="py-2 px-4 text-center text-gray-500">Tidak ada data pengguna.</td>
-                            </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-                <!-- Pagination -->
-                <div class="flex justify-center items-center mt-6">
-                    <% if (totalPages > 0) { %>
-                        <span class="text-sm text-gray-600 mr-4">
-                            Halaman <%= currentPage %> dari <%= totalPages %>
-                        </span>
-                        <div class="flex">
-                            <% for (let i = 1; i <= totalPages; i++) { %>
-                                <a href="?page=<%= i %>" class="px-3 py-1 mx-1 rounded-md text-sm font-medium
-                                    <% if (i === currentPage) { %>
-                                        bg-orange-500 text-white shadow-md
-                                    <% } else { %>
-                                        bg-white text-gray-700 border border-gray-300 hover:bg-gray-100
-                                    <% } %>
-                                ">
-                                    <%= i %>
-                                </a>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="4" class="py-2 px-4 text-center text-gray-500">Tidak ada data pengguna.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <!-- Pagination -->
+        <div class="flex justify-center items-center mt-6">
+            <% if (totalPages > 0) { %>
+                <span class="text-sm text-gray-600 mr-4">
+                    Halaman <%= currentPage %> dari <%= totalPages %>
+                </span>
+                <div class="flex">
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <a href="?page=<%= i %>" class="px-3 py-1 mx-1 rounded-md text-sm font-medium
+                            <% if (i === currentPage) { %>
+                                bg-orange-500 text-white shadow-md
+                            <% } else { %>
+                                bg-white text-gray-700 border border-gray-300 hover:bg-gray-100
                             <% } %>
-                        </div>
+                        ">
+                            <%= i %>
+                        </a>
                     <% } %>
                 </div>
-            </div>
+            <% } %>
         </div>
     </div>
+</div>
+</div>
 
-    <!-- Popup Konfirmasi Hapus -->
-    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <div class="flex items-center mb-4">
-                <div class="bg-red-100 rounded-full p-2 mr-3">
-                    <i class="fas fa-exclamation-triangle text-red-600"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Hapus</h3>
+<!-- Popup Konfirmasi Hapus -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+        <div class="flex items-center mb-4">
+            <div class="bg-red-100 rounded-full p-2 mr-3">
+                <i class="fas fa-exclamation-triangle text-red-600"></i>
             </div>
-            <p class="text-gray-600 mb-6" id="deleteMessage">
-                Apakah Anda yakin ingin menghapus user ini?
-            </p>
-            <div class="flex justify-end space-x-3">
-                <button 
-                    onclick="closeDeleteModal()" 
-                    class="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300 transition-colors duration-200 btn-hover">
-                    Batal
-                </button>
-                <button 
-                    id="confirmDeleteBtn"
-                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200 btn-hover">
-                    Hapus
-                </button>
-            </div>
+            <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Hapus</h3>
+        </div>
+        <p class="text-gray-600 mb-6" id="deleteMessage">
+            Apakah Anda yakin ingin menghapus user ini?
+        </p>
+        <div class="flex justify-end space-x-3">
+            <button 
+                onclick="closeDeleteModal()" 
+                class="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300 transition-colors duration-200 btn-hover">
+                Batal
+            </button>
+            <button 
+                id="confirmDeleteBtn"
+                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200 btn-hover">
+                Hapus
+            </button>
         </div>
     </div>
+</div>
 
-    <!-- Popup Sukses -->
-    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="successModalContent">
-            <div class="flex items-center mb-4">
-                <div class="bg-green-100 rounded-full p-3 mr-3">
-                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900">Berhasil!</h3>
+<!-- Popup Sukses -->
+<div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="successModalContent">
+        <div class="flex items-center mb-4">
+            <div class="bg-green-100 rounded-full p-3 mr-3">
+                <i class="fas fa-check-circle text-green-600 text-xl"></i>
             </div>
-            <p class="text-gray-600 mb-6" id="successMessage">
-                User berhasil dihapus!
-            </p>
-            <div class="flex justify-end">
-                <button 
-                    onclick="closeSuccessModal()" 
-                    class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 font-medium btn-hover">
-                    OK
-                </button>
-            </div>
+            <h3 class="text-lg font-semibold text-gray-900">Berhasil!</h3>
+        </div>
+        <p class="text-gray-600 mb-6" id="successMessage">
+            User berhasil dihapus!
+        </p>
+        <div class="flex justify-end">
+            <button 
+                onclick="closeSuccessModal()" 
+                class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 font-medium btn-hover">
+                OK
+            </button>
         </div>
     </div>
+</div>
 
-    <!-- Popup Error -->
-    <div id="errorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="errorModalContent">
-            <div class="flex items-center mb-4">
-                <div class="bg-red-100 rounded-full p-3 mr-3">
-                    <i class="fas fa-times-circle text-red-600 text-xl"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900">Error!</h3>
+<!-- Popup Error -->
+<div id="errorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="errorModalContent">
+        <div class="flex items-center mb-4">
+            <div class="bg-red-100 rounded-full p-3 mr-3">
+                <i class="fas fa-times-circle text-red-600 text-xl"></i>
             </div>
-            <p class="text-gray-600 mb-6" id="errorMessage">
-                Terjadi kesalahan!
-            </p>
-            <div class="flex justify-end">
-                <button 
-                    onclick="closeErrorModal()" 
-                    class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 font-medium btn-hover">
-                    OK
-                </button>
-            </div>
+            <h3 class="text-lg font-semibold text-gray-900">Error!</h3>
+        </div>
+        <p class="text-gray-600 mb-6" id="errorMessage">
+            Terjadi kesalahan!
+        </p>
+        <div class="flex justify-end">
+            <button 
+                onclick="closeErrorModal()" 
+                class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 font-medium btn-hover">
+                OK
+            </button>
         </div>
     </div>
+</div>
 
-    <script src="/javascript/common.js"></script>
-    <script>
-        let currentUserId = null;
+<script src="/javascript/common.js"></script>
+<script>
+    let currentUserId = null;
 
-        function confirmDelete(button) {
-            const userId = button.getAttribute('data-user-id');
-            const userName = button.getAttribute('data-user-name');
-            currentUserId = userId;
-            document.getElementById('deleteMessage').textContent = `Apakah Anda yakin ingin menghapus user "${userName}"?`;
-            document.getElementById('deleteModal').classList.remove('hidden');
-        }
+    function confirmDelete(button) {
+        const userId = button.getAttribute('data-user-id');
+        const userName = button.getAttribute('data-user-name');
+        currentUserId = userId;
+        document.getElementById('deleteMessage').textContent = `Apakah Anda yakin ingin menghapus user "${userName}"?`;
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
 
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
-            currentUserId = null;
-        }
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+        currentUserId = null;
+    }
 
-        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
-            if (!currentUserId) return;
-            try {
-                const response = await fetch(`/admin/users/${currentUserId}`, { method: 'DELETE' });
-                const result = await response.json();
-                if (result.success) {
-                    showSuccessModal('User berhasil dihapus!');
-                } else {
-                    showErrorModal('Gagal menghapus user: ' + result.message);
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+        if (!currentUserId) return;
+
+        const button = this;
+        button.disabled = true;
+        button.innerHTML = '<span class="animate-pulse">Menghapus...</span>';
+
+        try {
+            const response = await fetch(`/admin/users/${currentUserId}`, { method: 'DELETE' });
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                // Hapus baris dari tabel
+                const rowToRemove = document.querySelector(`button[data-user-id='${currentUserId}']`).closest('tr');
+                if (rowToRemove) {
+                    rowToRemove.classList.add('animate-fade-out');
+                    rowToRemove.addEventListener('animationend', () => {
+                        rowToRemove.remove();
+                    });
                 }
-            } catch (error) {
-                showErrorModal('Terjadi kesalahan: ' + error.message);
+                showSuccessModal('User berhasil dihapus!');
+            } else {
+                showErrorModal(result.message || 'Gagal menghapus user.');
             }
+        } catch (error) {
+            showErrorModal('Terjadi kesalahan koneksi.');
+        } finally {
             closeDeleteModal();
-        });
+            button.disabled = false;
+            button.innerHTML = 'Hapus';
+        }
+    });
 
-        function showSuccessModal(message) {
-            // ... implementasi
-        }
-        function closeSuccessModal() {
-            // ... implementasi
-             window.location.reload();
-        }
-        function showErrorModal(message) {
-            // ... implementasi
-        }
-        function closeErrorModal() {
-            // ... implementasi
-        }
+    function showSuccessModal(message) {
+        document.getElementById('successMessage').textContent = message;
+        const modal = document.getElementById('successModal');
+        const content = document.getElementById('successModalContent');
+        modal.classList.remove('hidden');
+        setTimeout(() => content.classList.remove('scale-95', 'opacity-0'), 10);
+    }
 
-        document.addEventListener('DOMContentLoaded', () => {
-             // Fungsi untuk menutup submenu permintaan jika terbuka
-            const permintaanSubmenu = document.querySelector('.nav-submenu.active');
-            if (permintaanSubmenu) {
-                permintaanSubmenu.classList.remove('active');
-                const submenuList = permintaanSubmenu.querySelector('.submenu-list');
-                const chevron = permintaanSubmenu.querySelector('.submenu-header i');
-                submenuList.style.maxHeight = '0';
-                if (chevron) chevron.style.transform = 'rotate(0deg)';
-            }
-        });
+    function closeSuccessModal() {
+        const modal = document.getElementById('successModal');
+        const content = document.getElementById('successModalContent');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
 
-    </script>
+    function showErrorModal(message) {
+        document.getElementById('errorMessage').textContent = message;
+        const modal = document.getElementById('errorModal');
+        const content = document.getElementById('errorModalContent');
+        modal.classList.remove('hidden');
+        setTimeout(() => content.classList.remove('scale-95', 'opacity-0'), 10);
+    }
+
+    function closeErrorModal() {
+        const modal = document.getElementById('errorModal');
+        const content = document.getElementById('errorModalContent');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+         // Fungsi untuk menutup submenu permintaan jika terbuka
+        const permintaanSubmenu = document.querySelector('.nav-submenu.active');
+        if (permintaanSubmenu) {
+            permintaanSubmenu.classList.remove('active');
+            const submenuList = permintaanSubmenu.querySelector('.submenu-list');
+            const chevron = permintaanSubmenu.querySelector('.submenu-header i');
+            submenuList.style.maxHeight = '0';
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+        }
+    });
+
+</script>
 <%- include('../partials/admin-footer') %> 

@@ -124,12 +124,18 @@ exports.updateRequestStatus = async (req, res) => {
 exports.updateRequestComment = async (req, res) => {
     const { id } = req.params;
     const { komentar_admin } = req.body;
+    
+    console.log('updateRequestComment called with:', { id, komentar_admin, body: req.body });
+    
     try {
         const request = await request_surat.findByPk(id);
         if (request) {
+            console.log('Found request:', request.id);
             await request.update({ komentar_admin });
+            console.log('Comment updated successfully');
             res.status(200).json({ success: true });
         } else {
+            console.log('Request not found with id:', id);
             res.status(404).json({ success: false, message: 'Permintaan tidak ditemukan' });
         }
     } catch (error) {
@@ -178,7 +184,7 @@ exports.showEditFormPengumuman = async (req, res) => {
         res.render('admin/pengumuman_form', {
             data: announcement,
             formAction: `edit/${req.params.id}`,
-            success: false
+            success: req.query.success === 'true'
         });
     } catch (error) {
         console.error(error);
@@ -194,7 +200,7 @@ exports.updatePengumuman = async (req, res) => {
             isi,
             tanggal_posting: tanggal
         }, { where: { id: req.params.id } });
-        res.redirect('/admin/pengumuman');
+        res.redirect(`/admin/pengumuman/edit/${req.params.id}?success=true`);
     } catch (error) {
         console.error(error);
         res.status(500).send("Gagal memperbarui pengumuman.");
@@ -226,7 +232,7 @@ exports.showFormSurat = (req, res) => {
     res.render('admin/template_form', { 
         template: null, 
         error: req.query.error || null,
-        success: false 
+        success: req.query.success === 'true'
     });
 };
 
@@ -238,7 +244,7 @@ exports.createSurat = async (req, res) => {
             return res.redirect('/admin/template/add?error=Nama+dan+file+template+wajib+diisi');
         }
         await surat.create({ jenis_surat: name, template_file });
-        res.redirect('/admin/template?success=true');
+        res.redirect('/admin/template/add?success=true');
     } catch (error) {
         console.error('Error in createSurat:', error);
         res.redirect(`/admin/template/add?error=${encodeURIComponent(error.message)}`);
@@ -271,7 +277,7 @@ exports.showEditFormSurat = async (req, res) => {
         res.render('admin/template_form', { 
             template, 
             error: req.query.error || null,
-            success: false 
+            success: req.query.success === 'true'
         });
     } catch (error) {
         console.error('Error in showEditFormSurat:', error);
@@ -296,7 +302,7 @@ exports.updateSurat = async (req, res) => {
             templateFile = req.file.filename;
         }
         await surat.update({ jenis_surat: name, template_file: templateFile }, { where: { surat_id: req.params.id } });
-        res.redirect('/admin/template?success=true');
+        res.redirect(`/admin/template/edit/${req.params.id}?success=true`);
     } catch (error) {
         console.error('Error in updateSurat:', error);
         res.redirect(`/admin/template/edit/${req.params.id}?error=${encodeURIComponent(error.message)}`);

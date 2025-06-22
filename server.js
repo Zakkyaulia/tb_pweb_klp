@@ -17,8 +17,8 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 
 // Melayani file statis dari folder 'public'
 app.use(express.static(path.join(__dirname, 'public')));
-// Secara spesifik melayani file dari folder 'uploads' di root
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Secara spesifik melayani file dari folder 'uploads' di dalam 'src'
+app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
 
 // Middleware untuk parsing JSON dan form data
 app.use(express.json());
@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware untuk session
 app.use(cookieParser());
 app.use(session({
-    secret: 'ini-adalah-secret-key-yang-sangat-rahasia', // Ganti dengan secret key yang lebih aman di production
+    secret: 'ini-adalah-secret-key-yang-sangat-rahasia', 
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set ke true jika menggunakan HTTPS

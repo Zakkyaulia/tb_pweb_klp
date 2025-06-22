@@ -32,7 +32,7 @@
             <tr class="text-center">
               <td class="px-4 py-2 border-r border-gray-200"><%= index + 1 %></td>
               <td class="px-4 py-2 border-r border-gray-200 text-left text-blue-600 underline cursor-pointer">
-                 <a onclick="showPengumumanPreview('<%= item.judul.replace(/'/g, `\\'`) %>', `<%= item.isi.replace(/'/g, `\\'`).replace(/\\r?\\n/g, '<br>') %>`)"><%= item.judul %></a>
+                 <a onclick="showPengumumanPreview('<%= item.judul %>', '<%= item.isi %>')"><%= item.judul %></a>
               </td>
               <td class="px-4 py-2 border-r border-gray-200"><%= new Date(item.tanggal_posting).toLocaleDateString('id-ID') %></td>
               <td class="px-4 py-2 space-x-2">
@@ -81,6 +81,8 @@
     const previewModal = document.getElementById('previewModal');
     const previewModalTitle = document.getElementById('previewModalTitle');
     const previewModalContent = document.getElementById('previewModalContent');
+    const deleteModal = document.getElementById('deleteModal');
+    let deleteForm = null;
 
     function showPengumumanPreview(judul, isi) {
         previewModalTitle.innerText = judul;
@@ -93,6 +95,45 @@
         previewModalTitle.innerText = '';
         previewModalContent.innerHTML = '';
     }
+
+    function confirmDelete(event, form) {
+        event.preventDefault();
+        deleteForm = form;
+        deleteModal.classList.remove('hidden');
+    }
+
+    function cancelDelete() {
+        deleteModal.classList.add('hidden');
+        deleteForm = null;
+    }
+
+    function confirmDeleteSubmit() {
+        if (deleteForm) {
+            deleteForm.submit();
+        }
+    }
+
+    // Event listener untuk menutup modal dengan Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            if (!deleteModal.classList.contains('hidden')) {
+                cancelDelete();
+            }
+            if (!previewModal.classList.contains('hidden')) {
+                closePreviewModal();
+            }
+        }
+    });
+
+    // Event listener untuk menutup modal dengan klik di luar modal
+    document.addEventListener('click', function(event) {
+        if (event.target === deleteModal) {
+            cancelDelete();
+        }
+        if (event.target === previewModal) {
+            closePreviewModal();
+        }
+    });
 </script>
 
 <script src="/javascript/common.js"></script>

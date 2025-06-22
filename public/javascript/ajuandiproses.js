@@ -18,7 +18,7 @@ let selectedRequestId = null;
 
 function openKomentarModal(row) {
     selectedRequestId = row.dataset.requestId;
-    const currentKomentar = row.querySelector('.komentar-cell').firstChild.textContent.trim();
+    const currentKomentar = row.querySelector('.komentar-text').textContent.trim();
     document.getElementById('komentarInput').value = currentKomentar === '—' ? '' : currentKomentar;
     document.getElementById('komentarModal').classList.remove('hidden');
 }
@@ -32,15 +32,20 @@ async function simpanKomentar() {
     if (!selectedRequestId) return;
 
     const komentar = document.getElementById('komentarInput').value.trim();
+    
+    console.log('Sending comment:', { selectedRequestId, komentar });
 
     try {
         const response = await fetch(`/admin/requests/comment/${selectedRequestId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ komentar: komentar })
+            body: JSON.stringify({ komentar_admin: komentar })
         });
 
+        console.log('Response status:', response.status);
         const result = await response.json();
+        console.log('Response result:', result);
+        
         if (result.success) {
             window.location.reload();
         } else {

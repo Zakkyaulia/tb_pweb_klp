@@ -150,7 +150,7 @@
                                         <% } %>
                                     </td>
                                     <td class="p-6 text-gray-700 text-sm text-center komentar-cell">
-                                        <%= request.komentar_admin || '' %>
+                                        <span class="komentar-text"><%= request.komentar_admin || '' %></span>
                                         <button onclick="openKomentarModal(this.closest('tr'))" class="ml-2 px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded">Edit</button>
                                     </td>
                                 </tr>
