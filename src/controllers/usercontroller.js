@@ -25,7 +25,13 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+// Fungsi untuk menampilkan dashboard user
+const getDashboard = (req, res) => {
+    res.render('user/userdashboard');
+};
+
 module.exports = {
   getAllUsers,
-  fetchAllUsers // Ekspor fungsi ini untuk digunakan di rute
+  fetchAllUsers, // Ekspor fungsi ini untuk digunakan di rute
+  getDashboard
 };

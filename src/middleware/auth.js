@@ -18,6 +18,16 @@ const isAuthenticated = (req, res, next) => {
     res.redirect('/login');
 };
 
+// Middleware untuk memastikan pengguna adalah 'user'
+const ensureUser = (req, res, next) => {
+    if (req.session && req.session.user && req.session.user.role === 'user') {
+        return next();
+    }
+    // Redirect ke login jika bukan role 'user' atau belum login
+    res.redirect('/login');
+};
+
 module.exports = {
-    isAuthenticated
+    isAuthenticated,
+    ensureUser
 }; 

@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 // Gunakan Rute
 app.use('/', authRoutes); // Gunakan rute otentikasi untuk path dasar
 app.use('/admin', adminRoutes);
-app.use('/users', userRoutes); // Gunakan rute pengguna di bawah '/users'
+app.use('/user', userRoutes); // Gunakan rute pengguna di bawah '/user'
 
 // Sinkronisasi model dengan database
 db.sequelize.sync({ force: false })

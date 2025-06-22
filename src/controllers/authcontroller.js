@@ -17,19 +17,20 @@ const loginUser = async (req, res) => {
         if (user) {
             // Validasi password (sementara tanpa hashing)
             if (user.password === password) {
-                // Cek role user
+                // Simpan informasi user ke dalam session
+                req.session.user = {
+                    id: user.id,
+                    username: user.username,
+                    role: user.role
+                };
+                // Cek role user dan kirim respons yang sesuai
                 if (user.role === 'admin') {
-                    // Simpan informasi user ke dalam session
-                    req.session.user = {
-                        id: user.id,
-                        username: user.username,
-                        role: user.role
-                    };
-                    // Kirim respons sukses
-                    return res.json({ success: true });
+                    return res.json({ success: true, role: 'admin' });
+                } else if (user.role === 'user') {
+                    return res.json({ success: true, role: 'user' });
                 } else {
-                    // Kirim respons error jika bukan admin
-                    return res.status(403).json({ success: false, message: 'Akses ditolak. Hanya untuk Admin.' });
+                    // Role tidak valid
+                    return res.status(403).json({ success: false, message: 'Role tidak valid.' });
                 }
             } else {
                 // Password salah
