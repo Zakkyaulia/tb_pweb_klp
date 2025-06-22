@@ -15,20 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   request_surat.init({
     user_id: DataTypes.INTEGER,
-    nama: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    nim: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    jenis_surat: DataTypes.STRING,
+    surat_id: DataTypes.STRING,
     tanggal_request: DataTypes.DATE,
-    status: {
-      type: DataTypes.ENUM('diajukan', 'diproses', 'selesai'),
-      defaultValue: 'diajukan'
-    },
+    status: DataTypes.STRING,
     file_pengantar: DataTypes.STRING,
     komentar_admin: DataTypes.TEXT
   }, {

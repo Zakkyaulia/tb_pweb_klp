@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Template Surat - SIPAS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function openModal(judul) {
+      document.getElementById('modalJudul').innerText = judul;
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+    }
+  </script>
+</head>
+<body class="bg-green-800 min-h-screen p-6 text-gray-700">
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center mb-6 text-white">
+    <h1 class="text-2xl font-bold">SIPAS</h1>
+    <ul class="flex space-x-6 font-semibold">
+      <li><a href="/dashboard">Mulai</a></li>
+      <li><a href="/template" class="bg-orange-600 px-3 py-1 rounded">Template</a></li>
+      <li><a href="/history">Riwayat</a></li>
+      <li><a href="#">Profil</a></li>
+      <li><a href="/petunjuk">Petunjuk</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+    <h2 class="text-xl font-bold bg-orange-400 p-2 rounded text-white mb-4">Template Surat</h2>
+    <ul class="space-y-4">
+      <% const templates = [
+        { id: 1, judul: 'Surat Keterangan Aktif Kuliah' },
+        { id: 2, judul: 'Surat Keterangan Lulus' },
+        { id: 3, judul: 'Surat Berhenti Studi Sementara' },
+        { id: 4, judul: 'Surat Aktif Kembali' },
+        { id: 5, judul: 'Surat Keterangan Tidak Menerima Beasiswa' }
+      ]; %>
+
+      <% templates.forEach((item) => { %>
+        <li class="flex items-center justify-between">
+          <span><%= item.judul %></span>
+          <div class="space-x-2">
+            <button onclick="openModal('<%= item.judul %>')" class="bg-orange-400 text-white px-4 py-1 rounded shadow">Lihat</button>
+            <a href="/template/<%= item.id %>" class="bg-green-600 text-white px-4 py-1 rounded shadow">Detail</a>
+          </div>
+        </li>
+      <% }); %>
+    </ul>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+    <div class="bg-white w-96 p-6 rounded-lg text-center relative shadow-lg">
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-500 text-lg">✕</button>
+      <h3 class="text-sm text-gray-600 mb-2" id="modalJudul"></h3>
+      <p class="text-xl font-bold text-gray-800">TEMPLATE SURAT</p>
+    </div>
+  </div>
+</body>
+</html>

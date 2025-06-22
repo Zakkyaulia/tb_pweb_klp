@@ -1,0 +1,25 @@
+<!-- views/login.ejs -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - SIPAS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-700 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full flex flex-col md:flex-row">
+    <div class="md:w-full bg-green-700 text-white flex flex-col items-center justify-center p-8">
+      <img src="/images/download.png" alt="Logo" class="mb-6 w-3/4 max-w-xs">
+      <h1 class="text-[80px] font-bold font-['Jomhuria'] tracking-wider mb-6">SIPAS</h1>
+
+      <form action="/login/choose" method="POST" class="flex flex-col items-center gap-4 w-full max-w-sm">
+        <select name="role" class="w-full h-12 rounded-xl px-4 text-lg text-black bg-white">
+          <option value="admin">Admin</option>
+          <option value="mahasiswa">Mahasiswa</option>
+        </select>
+        <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-white rounded-xl py-3 px-10 font-bold text-lg">PILIH</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

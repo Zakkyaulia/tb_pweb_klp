@@ -6,4 +6,4 @@ const sequelize = new Sequelize('tb_pweb', 'root', '', {
   port: 3306
 });
 
-module.exports = sequelize;
+module.exports = sequelize;
