@@ -12,22 +12,32 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'user', 
+          model: 'user',
           key: 'user_id'
         },
       },
-      surat_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'surat', 
-          key: 'surat_id'
-        },
+      nama: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      nim: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      jurusan: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      jenis_surat: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       tanggal_request: {
         type: Sequelize.DATE
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.ENUM('diajukan', 'diproses', 'selesai'),
+        defaultValue: 'diajukan',
       },
       file_pengantar: {
         type: Sequelize.STRING

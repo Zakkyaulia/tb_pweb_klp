@@ -1,0 +1,35 @@
+<%- include('../partials/admin-header', { title: 'Dashboard' }) %>
+
+<%- include('../partials/navbar') %>
+
+<!-- Main Content -->
+<div class="flex-1 bg-green-800 p-10 min-h-screen text-white">
+  <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100 absolute right-10"></i>
+  <h1 class="text-lg mb-4">Selamat Datang, <span class="font-bold text-2x1"><%= name %></span></h1>
+
+  <div class="bg-gray-100 p-6 rounded-md grid grid-cols-2 gap-4 text-black">
+    <div class="bg-white shadow p-4 rounded">
+      <h2 class="text-sm font-medium text-gray-700">TOTAL PENGGUNA</h2>
+      <p class="text-3xl font-bold"><%= data.totalUser %></p>
+      <button class="mt-2 text-xs bg-orange-500 text-white px-2 py-1 rounded">Lihat Detail</button>
+    </div>
+    <div class="bg-white shadow p-4 rounded">
+      <h2 class="text-sm font-medium text-gray-700">TOTAL PENGAJUAN</h2>
+      <p class="text-3xl font-bold"><%= data.totalRequest %></p>
+    </div>
+    <div class="bg-white shadow p-4 rounded">
+      <h2 class="text-sm font-medium text-gray-700">PENGAJUAN BARU</h2>
+      <p class="text-3xl font-bold"><%= data.newRequest %></p>
+    </div>
+    <div class="bg-white shadow p-4 rounded">
+      <h2 class="text-sm font-medium text-gray-700">PENGAJUAN DALAM PROSES</h2>
+      <p class="text-3xl font-bold"><%= data.inProcess %></p>
+    </div>
+    <div class="bg-white shadow p-4 rounded col-span-2 sm:col-span-1">
+      <h2 class="text-sm font-medium text-gray-700">PENGAJUAN SELESAI</h2>
+      <p class="text-3xl font-bold"><%= data.finished %></p>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/admin-footer') %>

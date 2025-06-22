@@ -13,10 +13,26 @@ module.exports = {
         type: Sequelize.STRING
       },
       nim: {
-        type: Sequelize.STRING 
+        type: Sequelize.STRING
+      },
+      jurusan: {
+        type: Sequelize.STRING
+      },
+      email: {
+        type: Sequelize.STRING
+      },
+      username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       role: {
-        type: Sequelize.ENUM('admin', 'user')
+        type: Sequelize.ENUM('user', 'admin'),
+        allowNull: false,
+        defaultValue: 'user'
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +45,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('user'); // <- pastikan konsisten dengan nama tabel
   }
 };
