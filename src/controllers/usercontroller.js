@@ -1,5 +1,5 @@
 // src/controllers/userController.js
-const { User, Sequelize } = require('../models');
+const { users: User, Sequelize } = require('../models');
 const Op = Sequelize.Op;
 
 const fetchAllUsers = async (jurusan, page, nim) => {

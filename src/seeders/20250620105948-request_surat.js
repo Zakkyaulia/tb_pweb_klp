@@ -265,11 +265,11 @@ module.exports = {
         komentar_admin: null,
         createdAt: new Date('2025-06-21 22:00:00'),
         updatedAt: new Date('2025-06-21 22:00:00'),
-      }
+      },
     ], {});
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete('request_surats', null, {});
-  },
+  }
 };

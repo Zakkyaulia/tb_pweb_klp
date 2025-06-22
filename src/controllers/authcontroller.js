@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { users } = require('../models');
 
 // Fungsi untuk menampilkan halaman login
 const getLoginPage = (req, res) => {
@@ -12,7 +12,7 @@ const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const user = await User.findOne({ where: { username: username } });
+        const user = await users.findOne({ where: { username: username } });
 
         if (user) {
             // Validasi password (sementara tanpa hashing)

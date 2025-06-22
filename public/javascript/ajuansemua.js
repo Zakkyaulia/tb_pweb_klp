@@ -6,14 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (semuaLink) {
         semuaLink.classList.add('active');
     }
-
-    // Reset button functionality
-    const resetBtn = document.getElementById('resetBtn');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', function() {
-            window.location.href = '/admin/requests/semua';
-        });
-    }
 });
 
 // Fungsi khusus untuk komentar (versi sederhana untuk halaman semua)

@@ -1,0 +1,46 @@
+<%- include('../partials/admin-header', { title: 'Tambah Pengumuman' }) %>
+<%- include('../partials/navbar') %>
+
+<% if (success) { %>
+<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-8 w-[400px] text-center">
+    <div class="flex justify-center items-center mb-4">
+      <div class="w-20 h-20 border-4 border-orange-400 rounded-full flex items-center justify-center">
+        <i class="fas fa-check text-4xl text-orange-500"></i>
+      </div>
+    </div>
+    <p class="text-gray-800 text-lg font-medium mb-6">Pengumuman berhasil di upload!</p>
+    <button onclick="window.location.href='/admin/pengumuman'" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+      Selesai
+    </button>
+  </div>
+</div>
+<% } %>
+
+<!-- Main Content -->
+<div class="relative flex-1 bg-green-800 p-10 min-h-screen text-white">
+  <i class="fas fa-user-circle user-icon text-white text-3xl z-50 absolute top-10 right-10 cursor-pointer hover:text-green-100"></i>
+  <div class="bg-white rounded-lg shadow-lg p-8 text-black mt-10">
+    <h1 class="text-2xl font-bold mb-6"><%= data ? 'Edit' : 'Tambah' %> Pengumuman</h1>
+    <form action="/admin/pengumuman/<%= formAction %>" method="POST">
+      <div class="mb-4">
+        <label for="judul" class="block text-sm font-medium text-gray-700">Judul:</label>
+        <input type="text" name="judul" id="judul" value="<%= data ? data.judul : '' %>" class="w-full border border-gray-300 rounded px-3 py-2 mt-1" required>
+      </div>
+      <div class="mb-4">
+        <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal:</label>
+        <input type="date" name="tanggal" id="tanggal" value="<%= data ? new Date(data.tanggal_posting).toISOString().split('T')[0] : '' %>" class="w-full border border-gray-300 rounded px-3 py-2 mt-1" required>
+      </div>
+      <div class="mb-4">
+        <label for="isi" class="block text-sm font-medium text-gray-700">Isi:</label>
+        <textarea name="isi" id="isi" rows="6" class="w-full border border-gray-300 rounded px-3 py-2 mt-1" required><%= data ? data.isi : '' %></textarea>
+      </div>
+      <div class="flex justify-end gap-4 mt-6">
+        <a href="/admin/pengumuman" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Batal</a>
+        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded">Upload</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/admin-footer') %>

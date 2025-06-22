@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavLinks();
     initializeSubmenuLinks();
     initializeLogoutConfirmation();
+    
+    // Buka submenu yang sesuai dengan halaman saat ini
+    openSubmenuDropdownNoAnimation();
 });
 
 // Inisialisasi menu user dropdown
@@ -59,16 +62,10 @@ function initializeSubmenuLinks() {
             submenuLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
             
-            const text = this.textContent.trim();
-            const routes = {
-                'Diajukan': '/admin/requests/diajukan',
-                'Diproses': '/admin/requests/diproses',
-                'Selesai': '/admin/requests/selesai',
-                'Semua': '/admin/requests/semua'
-            };
-            
-            if (routes[text]) {
-                window.location.href = routes[text];
+            // Navigasi langsung ke URL yang ditentukan
+            const href = this.getAttribute('href');
+            if (href) {
+                window.location.href = href;
             }
         });
 
@@ -165,47 +162,82 @@ function toggleSubmenu(header) {
     }
 }
 
-// Fungsi untuk membuka dropdown Permintaan secara otomatis
-function openPermintaanDropdown() {
-    const submenu = document.querySelector('.nav-submenu');
-    if (!submenu) return;
+// Fungsi untuk membuka dropdown submenu secara otomatis
+function openSubmenuDropdown() {
+    const currentPath = window.location.pathname;
     
-    const submenuList = submenu.querySelector('.submenu-list');
-    const chevron = submenu.querySelector('.submenu-header i');
+    // Cari semua submenu
+    const submenus = document.querySelectorAll('.nav-submenu');
     
-    // Buka dropdown
-    submenu.classList.add('active');
-    submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
-    if (chevron) {
-        chevron.style.transform = 'rotate(180deg)';
-    }
+    submenus.forEach(submenu => {
+        const submenuLinks = submenu.querySelectorAll('.submenu-link');
+        let shouldOpen = false;
+        
+        // Cek apakah ada link yang sesuai dengan path saat ini
+        submenuLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                shouldOpen = true;
+                link.classList.add('active');
+            }
+        });
+        
+        // Jika ada link yang aktif, buka submenu
+        if (shouldOpen) {
+            const submenuList = submenu.querySelector('.submenu-list');
+            const chevron = submenu.querySelector('.submenu-header i');
+            
+            submenu.classList.add('active');
+            submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
+            if (chevron) {
+                chevron.style.transform = 'rotate(180deg)';
+            }
+        }
+    });
 }
 
 // Fungsi untuk membuka dropdown tanpa animasi (untuk halaman yang sudah aktif)
-function openPermintaanDropdownNoAnimation() {
-    const submenu = document.querySelector('.nav-submenu');
-    if (!submenu) return;
+function openSubmenuDropdownNoAnimation() {
+    const currentPath = window.location.pathname;
     
-    const submenuList = submenu.querySelector('.submenu-list');
-    const chevron = submenu.querySelector('.submenu-header i');
+    // Cari semua submenu
+    const submenus = document.querySelectorAll('.nav-submenu');
+    
+    submenus.forEach(submenu => {
+        const submenuLinks = submenu.querySelectorAll('.submenu-link');
+        let shouldOpen = false;
+        
+        // Cek apakah ada link yang sesuai dengan path saat ini
+        submenuLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                shouldOpen = true;
+                link.classList.add('active');
+            }
+        });
+        
+        // Jika ada link yang aktif, buka submenu tanpa animasi
+        if (shouldOpen) {
+            const submenuList = submenu.querySelector('.submenu-list');
+            const chevron = submenu.querySelector('.submenu-header i');
 
-    // 1. Matikan animasi untuk sementara
-    submenuList.style.transition = 'none';
-    if (chevron) chevron.style.transition = 'none';
+            // 1. Matikan animasi untuk sementara
+            submenuList.style.transition = 'none';
+            if (chevron) chevron.style.transition = 'none';
 
-    // 2. Buka submenu
-    submenu.classList.add('active');
-    submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
-    if (chevron) {
-        chevron.style.transform = 'rotate(180deg)';
-    }
+            // 2. Buka submenu
+            submenu.classList.add('active');
+            submenuList.style.maxHeight = submenuList.scrollHeight + 'px';
+            if (chevron) {
+                chevron.style.transform = 'rotate(180deg)';
+            }
 
-    // 3. Paksa browser menggambar ulang
-    void submenuList.offsetHeight;
+            // 3. Paksa browser menggambar ulang
+            void submenuList.offsetHeight;
 
-    // 4. Nyalakan kembali animasi
-    submenuList.style.transition = 'max-height 0.3s ease-in-out';
-    if (chevron) chevron.style.transition = 'transform 0.3s ease-in-out';
+            // 4. Nyalakan kembali animasi
+            submenuList.style.transition = 'max-height 0.3s ease-in-out';
+            if (chevron) chevron.style.transition = 'transform 0.3s ease-in-out';
+        }
+    });
 }
 
 function initializeLogoutConfirmation() {

@@ -1,8 +1,9 @@
 <script>
+    // Fungsi ini dipanggil oleh atribut `onclick` di navbar.ejs untuk toggle submenu
     function toggleSubmenu(header) {
         const submenu = header.parentElement;
         const submenuList = submenu.querySelector('.submenu-list');
-        const chevron = header.querySelector('i');
+        const chevron = header.querySelector('i.fa-chevron-down');
 
         submenu.classList.toggle('active');
 
@@ -34,9 +35,27 @@
         }
     }
 
-    // Buka dropdown saat halaman dimuat
+    // Fungsi ini berjalan saat halaman dimuat untuk memberi highlight dan membuka menu yang aktif
     document.addEventListener('DOMContentLoaded', function() {
         const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-menu a.nav-link, .nav-menu a.submenu-link');
+
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+
+                // Jika link yang aktif ada di dalam submenu, buka submenu tersebut
+                const parentSubmenu = link.closest('.nav-submenu');
+                if (parentSubmenu) {
+                    const header = parentSubmenu.querySelector('.submenu-header');
+                    if (header && !parentSubmenu.classList.contains('active')) {
+                        toggleSubmenu(header);
+                    }
+                }
+            }
+        });
+
+        // Buka dropdown saat halaman dimuat untuk halaman requests
         if (currentPath.startsWith('/admin/requests/')) {
             openPermintaanDropdown();
         }

@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const { request_surat } = require('../models');
 const adminController = require('../controllers/admincontroller');
 const userController = require('../controllers/usercontroller');
@@ -8,6 +11,32 @@ const { isAuthenticated } = require('../middleware/auth');
 // Terapkan middleware ini ke semua rute di bawah ini
 router.use(isAuthenticated);
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const dir = path.join(__dirname, '../uploads');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    cb(null, dir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (ext === '.pdf') {
+    cb(null, true);
+  } else {
+    cb(new Error('Hanya file PDF yang diperbolehkan!'), false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
+
+// ------------------ DASHBOARD ------------------
+router.get('/dashboard', adminController.getDashboardStats);
+
+// ------------------ REQUEST SURAT ------------------
 router.get('/requests/diajukan', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -91,6 +120,23 @@ router.get('/requests/selesai', async (req, res) => {
     }
 });
 
+router.get('/requests/semua', adminController.getAllRequests);
+
+router.post('/requests/update/:id', adminController.updateRequestStatus);
+
+// Route untuk generate PDF permintaan diproses
+router.get('/requests/diproses/pdf', adminController.generatePDFForDiproses);
+
+// Route untuk generate PDF permintaan selesai
+router.get('/requests/selesai/pdf', adminController.generatePDFForSelesai);
+
+// Route untuk generate PDF permintaan diajukan
+router.get('/requests/diajukan/pdf', adminController.generatePDFForDiajukan);
+
+// Route untuk memperbarui komentar
+router.post('/requests/comment/:id', adminController.updateRequestComment);
+
+// ------------------ PENGELOLAAN PENGGUNA ------------------
 router.get('/kelola-pengguna', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -112,28 +158,11 @@ router.get('/kelola-pengguna', async (req, res) => {
     }
 });
 
-router.get('/requests/semua', adminController.getAllRequests);
-
-router.post('/requests/update/:id', adminController.updateRequestStatus);
-
 // Route untuk menghapus user
 router.delete('/users/:user_id', adminController.deleteUser);
 
-// Route untuk generate PDF permintaan diproses
-router.get('/requests/diproses/pdf', adminController.generatePDFForDiproses);
-
-// Route untuk generate PDF permintaan selesai
-router.get('/requests/selesai/pdf', adminController.generatePDFForSelesai);
-
-// Route untuk generate PDF permintaan diajukan
-router.get('/requests/diajukan/pdf', adminController.generatePDFForDiajukan);
-
-// Route untuk memperbarui komentar
-router.post('/requests/comment/:id', adminController.updateRequestComment);
-
 // Rute untuk menampilkan halaman detail pengguna
-// URL: /admin/detail-user
-router.get('/detail-user', async (req, res) => {
+router.get('/detailuser', async (req, res) => {
     try {
         const { jurusan, nim } = req.query;
         const page = parseInt(req.query.page) || 1;
@@ -164,6 +193,22 @@ router.get('/detail-user', async (req, res) => {
     }
 });
 
-router.get('/detail-user/pdf', adminController.generatePDFForUserDetail);
+router.get('/detailuser/pdf', adminController.generatePDFForUserDetail);
+
+// ------------------ PENGUMUMAN ------------------
+router.get('/pengumuman', adminController.getAllPengumuman);
+router.get('/pengumuman/add', adminController.showFormPengumuman);
+router.post('/pengumuman/add', adminController.createPengumuman);
+router.get('/pengumuman/edit/:id', adminController.showEditFormPengumuman);
+router.post('/pengumuman/edit/:id', adminController.updatePengumuman);
+router.post('/pengumuman/delete/:id', adminController.deletePengumuman);
+
+// ------------------ TEMPLATE (SURAT) ------------------
+router.get('/template', adminController.getAllSurat);
+router.get('/template/add', adminController.showFormSurat);
+router.post('/template/add', upload.single('templateFile'), adminController.createSurat);
+router.post('/template/delete/:id', adminController.deleteSurat);
+router.get('/template/edit/:id', adminController.showEditFormSurat);
+router.post('/template/edit/:id', upload.single('templateFile'), adminController.updateSurat);
 
 module.exports = router;

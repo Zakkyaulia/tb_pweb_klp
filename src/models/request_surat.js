@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      request_surat.belongsTo(models.users, { foreignKey: 'user_id' });
     }
   }
   request_surat.init({
@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'request_surat',
+    timestamps: true
   });
   return request_surat;
 };

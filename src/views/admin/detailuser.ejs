@@ -3,7 +3,7 @@
 <%
 // Helper function to build URL with existing filters
 const filterUrl = (page) => {
-  let url = `/admin/detail-user?page=${page}`;
+  let url = `/admin/detailuser?page=${page}`;
   if (typeof selectedJurusan !== 'undefined' && selectedJurusan && selectedJurusan !== 'Semua') {
     url += `&jurusan=${encodeURIComponent(selectedJurusan)}`;
   }
@@ -110,7 +110,7 @@ const filterUrl = (page) => {
   function filterByJurusan() {
     const selectedJurusan = document.getElementById('jurusanFilter').value;
     const searchInput = document.getElementById('searchInput').value;
-    let url = `/admin/detail-user?page=1`;
+    let url = `/admin/detailuser?page=1`;
 
     if (selectedJurusan && selectedJurusan !== 'Semua') {
       url += `&jurusan=${selectedJurusan}`;
@@ -123,30 +123,34 @@ const filterUrl = (page) => {
 
   function generatePDF() {
     const selectedJurusan = document.getElementById('jurusanFilter').value;
-    let url = '/admin/detail-user/pdf';
+    const searchInput = document.getElementById('searchInput').value;
+    let url = '/admin/detailuser/pdf?';
+
+    const params = [];
     if (selectedJurusan && selectedJurusan !== 'Semua') {
-      url += `?jurusan=${selectedJurusan}`;
+      params.push(`jurusan=${encodeURIComponent(selectedJurusan)}`);
     }
-    window.location.href = url;
+    if (searchInput) {
+      params.push(`nim=${encodeURIComponent(searchInput)}`);
+    }
+    
+    window.location.href = url + params.join('&');
   }
   
   document.addEventListener('DOMContentLoaded', function() {
-    const jurusanFilter = document.getElementById('jurusanFilter');
-    const generatePdfBtn = document.getElementById('generatePdfBtn');
+    // Event listener ini tidak lagi diperlukan karena tombol PDF selalu tampil
+    // const jurusanFilter = document.getElementById('jurusanFilter');
+    // const generatePdfBtn = document.getElementById('generatePdfBtn');
 
-    function togglePdfButton() {
-        if (jurusanFilter.value === 'Semua') {
-            generatePdfBtn.classList.remove('hidden');
-        } else {
-            generatePdfBtn.classList.add('hidden');
-        }
-    }
-
-    // Panggil saat halaman dimuat
-    togglePdfButton();
-
-    // Panggil saat pilihan filter berubah
-    jurusanFilter.addEventListener('change', togglePdfButton);
+    // function togglePdfButton() {
+    //     if (jurusanFilter.value === 'Semua') {
+    //         generatePdfBtn.classList.remove('hidden');
+    //     } else {
+    //         generatePdfBtn.classList.add('hidden');
+    //     }
+    // }
+    // togglePdfButton();
+    // jurusanFilter.addEventListener('change', togglePdfButton);
   });
 
   document.getElementById('searchForm').addEventListener('submit', function(e) {
@@ -155,7 +159,7 @@ const filterUrl = (page) => {
   });
 
   function resetFilters() {
-    window.location.href = '/admin/detail-user';
+    window.location.href = '/admin/detailuser';
   }
 </script>
 

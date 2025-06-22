@@ -14,11 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   surat.init({
+    surat_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
     jenis_surat: DataTypes.STRING,
     template_file: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'surat',
+    tableName: 'surat',
+    timestamps: true
   });
   return surat;
 };
