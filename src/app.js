@@ -19,11 +19,15 @@ const upload = multer({ dest: 'uploads/' });
 const authRoutes = require('./routes/auth');
 const mahasiswaRoutes = require('./routes/mahasiswa');
 const adminRoutes = require('./routes/admin');
+const templateRoutes = require('./routes/template');
+const pengumumanRoutes = require('./routes/pengumuman');
 
 // Gunakan routes
 app.use('/', authRoutes);
 app.use('/', mahasiswaRoutes);
 app.use('/', adminRoutes);
+app.use('/template', templateRoutes);
+app.use('/pengumuman', pengumumanRoutes);
 
 // Upload surat (bisa disesuaikan penempatannya nanti)
 app.post('/upload-surat', upload.array('dokumen', 4), (req, res) => {
@@ -47,4 +51,4 @@ const sequelize = require('./config/db');
 
 sequelize.sync({ force: false })
   .then(() => console.log('Database dan model disinkronisasi'))
-  .catch(err => console.log('Error sinkronisasi:', err));
+  .catch(err => console.log('Error sinkronisasi:', err));

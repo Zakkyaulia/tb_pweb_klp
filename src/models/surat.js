@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class surat extends Model {
+  class Surat extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,12 +13,20 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  surat.init({
+  Surat.init({
+    surat_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     jenis_surat: DataTypes.STRING,
-    template_file: DataTypes.STRING
+    template_file: DataTypes.STRING,
+    preview_file: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'surat',
+    modelName: 'Surat',
+    tableName: 'surat',
+    timestamps: true
   });
-  return surat;
+  return Surat;
 };

@@ -1,0 +1,110 @@
+<style>
+    .sidebar-header {
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .logo-icon {
+        background: linear-gradient(135deg, #059669, #047857);
+    }
+    /* Hapus efek ::before dan gunakan hover sederhana */
+    .nav-link {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+        background: linear-gradient(90deg, rgba(5, 150, 105, 0.05), rgba(4, 120, 87, 0.05));
+        color: #047857; /* Warna hijau yang lebih gelap untuk teks */
+    }
+    .nav-link:hover i {
+        color: #059669; /* Warna hijau yang lebih terang untuk ikon */
+    }
+    .submenu-link.active {
+        background: linear-gradient(90deg, #f97316, #ea580c);
+        color: white;
+        border-radius: 0 25px 25px 0;
+        margin-right: 16px;
+        font-weight: 500;
+    }
+    .submenu-link:hover {
+        background: linear-gradient(90deg, rgba(247, 115, 22, 0.1), rgba(234, 88, 12, 0.1));
+        color: #f97316;
+        transition: all 0.3s ease;
+    }
+    .main-content {
+        background: linear-gradient(135deg, #059669, #047857);
+    }
+    .table-header {
+        background: linear-gradient(90deg, #f97316, #ea580c);
+    }
+    .submenu-list {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+    .nav-submenu.active .submenu-list {
+        max-height: 200px;
+    }
+    .submenu-header i {
+        transition: transform 0.3s ease-in-out;
+    }
+    .nav-submenu.active .submenu-header i {
+        transform: rotate(180deg);
+    }
+    @media (max-width: 768px) {
+        .sidebar.open {
+            transform: translateX(0);
+        }
+    }
+    
+    /* Animasi untuk popup */
+    .modal-content {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .modal-backdrop {
+        transition: opacity 0.3s ease-in-out;
+    }
+    
+    /* Efek hover untuk tombol */
+    .btn-hover {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .btn-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Gaya Paginasi Universal (Sesuai Screenshot 1 & 2) */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 20px;
+        align-items: center;
+    }
+    .pagination button {
+        padding: 8px 12px;
+        border: 1px solid #ea580c;
+        background: white;
+        color: #f97316;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s, color 0.3s;
+    }
+    .pagination button:hover {
+        background: #f97316;
+        color: white;
+    }
+    .pagination button:disabled {
+        background: #f97316;
+        color: white;
+        border-color: #f97316;
+        cursor: not-allowed;
+        opacity: 1;
+    }
+    .page-info {
+        margin: 0 10px;
+        color: #f97316;
+        font-weight: 500;
+    }
+</style> 

@@ -5,9 +5,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('request_surats', [
       {
-        user_id: 4, // fahri
-        nama: 'fahri',
-        nim: '2004',
+        user_id: 6, // dimas
         jenis_surat: 'SKAK',
         tanggal_request: new Date('2025-06-04 17:53:25'),
         status: 'diajukan',
@@ -17,9 +15,7 @@ module.exports = {
         updatedAt: new Date('2025-06-20 12:53:25'),
       },
       {
-        user_id: 1, // dimas
-        nama: 'dimas',
-        nim: '2001',
+        user_id: 7, // ningsih
         jenis_surat: 'SKAK',
         tanggal_request: new Date('2025-06-05 09:15:00'),
         status: 'diproses',
@@ -29,9 +25,7 @@ module.exports = {
         updatedAt: new Date('2025-06-20 13:00:00'),
       },
       {
-        user_id: 2, // ningsih
-        nama: 'ningsih',
-        nim: '2002',
+        user_id: 8, // zakky
         jenis_surat: 'SBSS',
         tanggal_request: new Date('2025-06-06 14:30:00'),
         status: 'selesai',
@@ -41,9 +35,7 @@ module.exports = {
         updatedAt: new Date('2025-06-20 14:00:00'),
       },
       {
-        user_id: 3, // zakky
-        nama: 'zakky',
-        nim: '2003',
+        user_id: 9, // fahri
         jenis_surat: 'SKL',
         tanggal_request: new Date('2025-06-07 16:45:00'),
         status: 'diajukan',
@@ -53,9 +45,7 @@ module.exports = {
         updatedAt: new Date('2025-06-20 15:00:00'),
       },
       {
-        user_id: 5, // rani
-        nama: 'rani',
-        nim: '2005',
+        user_id: 10, // rani
         jenis_surat: 'SKAK',
         tanggal_request: new Date('2025-06-08 10:20:00'),
         status: 'diproses',

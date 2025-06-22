@@ -1,0 +1,162 @@
+<%- include('../partials/admin-header', { title: 'Detail Pengguna' }) %>
+
+<%
+// Helper function to build URL with existing filters
+const filterUrl = (page) => {
+  let url = `/admin/detail-user?page=${page}`;
+  if (typeof selectedJurusan !== 'undefined' && selectedJurusan && selectedJurusan !== 'Semua') {
+    url += `&jurusan=${encodeURIComponent(selectedJurusan)}`;
+  }
+  if (typeof searchNIM !== 'undefined' && searchNIM) {
+    url += `&nim=${encodeURIComponent(searchNIM)}`;
+  }
+  return url;
+}
+%>
+
+<%- include('../partials/navbar') %>
+
+<div class="main-content flex-1 p-6" style="background-color: #3A6B4C;">
+  <div class="main-header flex justify-between items-center mb-6">
+    <h1 class="page-title text-3xl font-semibold text-white">Dasbor Pengguna</h1>
+    <%- include('../partials/_user-menu') %>
+  </div>
+
+  <div class="content-card bg-white rounded-xl shadow-lg p-8">
+    <div class="flex justify-between items-center mb-6">
+      <div class="flex items-center space-x-4">
+        <div class="relative">
+          <select id="jurusanFilter" onchange="filterByJurusan()" class="bg-orange-500 text-white px-4 py-2 rounded-lg flex items-center appearance-none pr-8 cursor-pointer">
+            <option value="Semua" <%= selectedJurusan === 'Semua' ? 'selected' : '' %>>Semua Jurusan</option>
+            <% allJurusan.forEach(jurusan => { %>
+              <option value="<%= jurusan %>" <%= selectedJurusan === jurusan ? 'selected' : '' %>><%= jurusan %></option>
+            <% }); %>
+          </select>
+          <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-white pointer-events-none"></i>
+        </div>
+        <div class="flex items-center gap-2">
+          <form id="searchForm" class="relative flex items-center">
+            <input type="text" id="searchInput" name="nim" placeholder="Cari NIM..." value="<%= searchNIM %>" class="border rounded-lg px-4 py-2 pl-10">
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">Cari</button>
+          </form>
+          <button onclick="resetFilters()" title="Reset Filter" class="bg-gray-500 text-white h-10 w-10 flex items-center justify-center rounded-lg text-sm transition-all duration-300 hover:bg-gradient-to-br hover:from-orange-400 hover:to-orange-500">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button id="generatePdfBtn" onclick="generatePDF()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-2">
+          <i class="fas fa-file-pdf"></i>
+          <span>Generate PDF</span>
+        </button>
+        <% if (typeof totalUsers !== 'undefined') { %>
+          <span class="text-green-600 text-lg font-medium">Total Pengguna: <strong><%= totalUsers %></strong></span>
+        <% } %>
+      </div>
+    </div>
+
+    <table class="w-4/5 mx-auto text-left border-collapse">
+      <thead class="text-white" style="background-color: #F97316;">
+        <tr>
+          <th class="py-2 px-4">No</th>
+          <th class="py-2 px-4">Nama</th>
+          <th class="py-2 px-4">NIM</th>
+          <th class="py-2 px-4">Jurusan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (users && users.length > 0) { %>
+          <% users.forEach((user, index) => { %>
+            <tr class="border-b border-gray-200 h-16">
+              <td class="py-4 px-4 text-gray-700"><%= index + 1 %></td>
+              <td class="py-4 px-4 text-gray-700"><%= user.nama %></td>
+              <td class="py-4 px-4 text-gray-700"><%= user.nim %></td>
+              <td class="py-4 px-4 text-gray-700"><%= user.jurusan %></td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="4" class="py-4 px-4 text-center text-gray-500">Tidak ada data pengguna.</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-center items-center space-x-4">
+      <% if (totalPages > 0) { %>
+        <span class="text-sm font-medium text-orange-600">
+          Halaman <%= currentPage %> dari <%= totalPages %>
+        </span>
+        <div class="flex items-center">
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <a href="<%= filterUrl(i) %>"
+               class="px-4 py-2 mx-1 text-sm rounded-md font-medium transition-colors 
+                      <%= i === currentPage 
+                          ? 'bg-orange-600 text-white border border-orange-600' 
+                          : 'bg-white text-orange-600 border border-orange-600 hover:bg-orange-600 hover:text-white' %>">
+              <%= i %>
+            </a>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function filterByJurusan() {
+    const selectedJurusan = document.getElementById('jurusanFilter').value;
+    const searchInput = document.getElementById('searchInput').value;
+    let url = `/admin/detail-user?page=1`;
+
+    if (selectedJurusan && selectedJurusan !== 'Semua') {
+      url += `&jurusan=${selectedJurusan}`;
+    }
+    if (searchInput) {
+      url += `&nim=${searchInput}`;
+    }
+    window.location.href = url;
+  }
+
+  function generatePDF() {
+    const selectedJurusan = document.getElementById('jurusanFilter').value;
+    let url = '/admin/detail-user/pdf';
+    if (selectedJurusan && selectedJurusan !== 'Semua') {
+      url += `?jurusan=${selectedJurusan}`;
+    }
+    window.location.href = url;
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const jurusanFilter = document.getElementById('jurusanFilter');
+    const generatePdfBtn = document.getElementById('generatePdfBtn');
+
+    function togglePdfButton() {
+        if (jurusanFilter.value === 'Semua') {
+            generatePdfBtn.classList.remove('hidden');
+        } else {
+            generatePdfBtn.classList.add('hidden');
+        }
+    }
+
+    // Panggil saat halaman dimuat
+    togglePdfButton();
+
+    // Panggil saat pilihan filter berubah
+    jurusanFilter.addEventListener('change', togglePdfButton);
+  });
+
+  document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    filterByJurusan(); // Re-use the same logic
+  });
+
+  function resetFilters() {
+    window.location.href = '/admin/detail-user';
+  }
+</script>
+
+<%- include('../partials/admin-footer') %>

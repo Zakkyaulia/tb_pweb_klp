@@ -10,18 +10,46 @@
   <nav class="flex justify-between items-center mb-6 text-white">
     <h1 class="text-2xl font-bold text-green-800">SIPAS</h1>
     <ul class="flex space-x-6 font-semibold text-green-800">
-      <li><a href="/dashboard">Mulai</a></li>
+      <li><a href="/pengumuman">Pengumuman</a></li>
       <li><a href="/template" class="bg-orange-600 px-3 py-1 rounded text-white">Template</a></li>
       <li><a href="/history">Riwayat</a></li>
-      <li><a href="#">Profil</a></li>
       <li><a href="/petunjuk">Petunjuk</a></li>
+      <li><a href="/pengajuan">Mulai</a></li>
     </ul>
   </nav>
 
-  <main class="bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto text-center">
-    <h2 class="text-lg font-semibold text-gray-600"><%= judul %></h2>
-    <p class="text-2xl font-bold my-6">TEMPLATE SURAT</p>
-    <a href="/files/<%= file %>" download class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded shadow">Download PDF</a>
+  <main class="flex-1 bg-white p-6 rounded-lg m-6 shadow max-w-4xl mx-auto">
+    <% if (template) { %>
+      <h2 class="text-2xl font-bold mb-4 text-center"><%= template.jenis_surat %></h2>
+      
+      <!-- Pratinjau Gambar -->
+      <div class="mb-6 border rounded-lg p-4">
+        <h3 class="font-semibold text-lg mb-2">Pratinjau</h3>
+        <% if (template.preview_file) { %>
+          <img src="/images/files/<%= template.preview_file %>" alt="Pratinjau <%= template.jenis_surat %>" class="w-full h-auto border">
+        <% } else { %>
+          <p class="text-gray-500">Pratinjau tidak tersedia.</p>
+        <% } %>
+      </div>
+
+      <!-- Tombol Download -->
+      <div class="text-center">
+        <% if (template.template_file) { %>
+          <a href="/uploads/files/<%= template.template_file %>" download class="inline-block bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition shadow-lg">
+            Download Template (.docx)
+          </a>
+        <% } else { %>
+          <p class="text-gray-500">File template tidak tersedia untuk diunduh.</p>
+        <% } %>
+      </div>
+
+    <% } else if (error) { %>
+      <h2 class="text-2xl font-bold text-red-500">Error</h2>
+      <p><%= error %></p>
+    <% } else { %>
+      <h2 class="text-2xl font-bold">Template Tidak Ditemukan</h2>
+      <p>Maaf, template yang Anda cari tidak dapat ditemukan.</p>
+    <% } %>
   </main>
 </body>
 </html>

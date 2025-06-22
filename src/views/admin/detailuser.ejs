@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Daftar Pengguna - SIPAS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex bg-green-700 min-h-screen text-gray-800">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-100 p-6 space-y-4">
+    <div class="text-center">
+      <img src="/logo.png" alt="Logo" class="h-12 mx-auto mb-2" />
+      <h1 class="text-green-800 font-bold text-xl">SIPAS</h1>
+    </div>
+    <nav class="space-y-2">
+      <a href="/dashboard-admin" class="block bg-orange-400 text-white py-2 px-4 rounded">Dashboard</a>
+      <a href="/detail-user" class="block text-green-700 px-4 py-2 hover:bg-gray-200 rounded">Detail Pengguna</a>
+      <a href="/template" class="block text-green-700 px-4 py-2 hover:bg-gray-200 rounded">Template</a>
+      <a href="/pengumuman" class="block text-green-700 px-4 py-2 hover:bg-gray-200 rounded">Pengumuman</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <main class="flex-1 bg-white p-6 rounded-lg m-6 shadow">
+    <h2 class="text-2xl font-bold mb-4">Daftar Pengguna</h2>
+    <div class="flex justify-between mb-4">
+      <div class="flex space-x-4 items-center">
+        <label for="jurusan" class="font-bold">Jurusan</label>
+        <select id="jurusan-filter" class="px-4 py-1 border border-orange-500 rounded bg-white text-orange-600 font-semibold">
+          <option value="semua">Semua Jurusan</option>
+          <option value="Informatika">Informatika</option>
+          <option value="Sistem Informasi">Sistem Informasi</option>
+          <option value="Teknik Komputer">Teknik Komputer</option>
+        </select>
+      </div>
+      <div class="flex items-center space-x-2">
+        <input type="text" id="search-input" placeholder="Cari Nama atau NIM" class="px-4 py-1 border border-orange-500 rounded" />
+        <button class="bg-orange-500 text-white px-2 py-1 rounded">🔍</button>
+        <button class="bg-orange-500 text-white px-2 py-1 rounded" onclick="location.reload()">🔄</button>
+      </div>
+    </div>
+
+    <!-- Tabel Pengguna -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left border border-collapse" id="user-table">
+        <thead class="bg-orange-600 text-white">
+          <tr>
+            <th class="px-4 py-2">No</th>
+            <th class="px-4 py-2">Nama</th>
+            <th class="px-4 py-2">NIM</th>
+            <th class="px-4 py-2">Jurusan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (users && users.length > 0) { %>
+            <% users.forEach((user, index) => { %>
+              <tr class="user-row border hover:bg-gray-50">
+                <td class="px-4 py-2"><%= index + 1 %></td>
+                <td class="nama-cell px-4 py-2 font-medium"><%= user.nama || 'N/A' %></td>
+                <td class="nim-cell px-4 py-2"><%= user.nim || 'N/A' %></td>
+                <td class="jurusan-cell px-4 py-2"><%= user.jurusan || 'N/A' %></td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr class="border">
+              <td colspan="4" class="px-4 py-4 text-center text-gray-500">
+                <% if (typeof error !== 'undefined' && error) { %>
+                  <%= error %>
+                <% } else { %>
+                  Tidak ada data pengguna
+                <% } %>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const jurusanSelect = document.getElementById('jurusan-filter');
+      const searchInput = document.getElementById('search-input');
+      const userTableBody = document.querySelector('#user-table tbody');
+      const userRows = Array.from(userTableBody.getElementsByClassName('user-row'));
+
+      function filterAndSearch() {
+        const selectedJurusan = jurusanSelect.value.toLowerCase();
+        const searchTerm = searchInput.value.toLowerCase();
+
+        userRows.forEach(row => {
+          const nama = row.querySelector('.nama-cell').textContent.toLowerCase();
+          const nim = row.querySelector('.nim-cell').textContent.toLowerCase();
+          const jurusan = row.querySelector('.jurusan-cell').textContent.toLowerCase();
+
+          const jurusanMatch = (selectedJurusan === 'semua' || jurusan === selectedJurusan);
+          const searchMatch = (nama.includes(searchTerm) || nim.includes(searchTerm));
+
+          if (jurusanMatch && searchMatch) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+
+      jurusanSelect.addEventListener('change', filterAndSearch);
+      searchInput.addEventListener('input', filterAndSearch);
+    });
+  </script>
+</body>
+</html> 
