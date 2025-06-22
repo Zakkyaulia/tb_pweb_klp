@@ -1,7 +1,15 @@
 const express = require('express');
 const path = require('path');
+const session = require('express-session');
 const app = express();
-const PORT = 3000;
+const PORT = 3002;
+
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -17,11 +25,25 @@ const indexRouter = require('./routes/index');
 const requestRoutes = require('./routes/request');
 const riwayatRoutes = require('./routes/riwayat');
 const templateRoutes = require('./routes/template');
+const authRoutes = require('./routes/authroute');
 
-app.use('/', indexRouter.router);
-app.use('/template', templateRoutes.router);
+app.use((req, res, next) => {
+  res.locals.user = req.session.user;
+  next();
+});
+
+app.get('/', (req, res) => {
+  if (req.session.user) {
+    res.redirect('/request/step1');
+  } else {
+    res.redirect('/login');
+  }
+});
+
+app.use('/', authRoutes);
 app.use('/request', requestRoutes.router);
 app.use('/riwayat', riwayatRoutes.router);
+app.use('/template', templateRoutes.router);
 
 app.use((req, res, next) => {
   res.status(404).send("Maaf, halaman yang Anda cari tidak ditemukan!");

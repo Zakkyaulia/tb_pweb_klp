@@ -19,11 +19,11 @@ const getJenisSuratName = (kode) => {
 };
 
 exports.getStep1 = async (req, res) => {
-  // Gunakan data dummy langsung tanpa query database
+  // Ambil data user dari session
   const userData = {
-    nama: 'dimas',
-    nim: '2001',
-    jurusan: 'sistem informasi'
+    nama: req.session.user.nama,
+    nim: req.session.user.nim,
+    jurusan: req.session.user.jurusan
   };
   res.render('request-step1', { active: 'Mulai', userData: userData });
 };
@@ -126,15 +126,11 @@ exports.postSubmit = async (req, res) => {
       `);
     }
 
-    // Gunakan data dummy user
-    const currentUser = {
-        nama: 'dimas',
-        nim: '2001',
-        jurusan: 'sistem informasi'
-    };
+    // Ambil data user dari session
+    const currentUser = req.session.user;
 
     await request_surat.create({
-      user_id: null, // Gunakan null untuk menghindari foreign key constraint
+      user_id: currentUser.id, // Gunakan id dari session
       nama: currentUser.nama,
       nim: currentUser.nim,
       jurusan: currentUser.jurusan,

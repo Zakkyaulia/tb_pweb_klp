@@ -66,7 +66,12 @@
                 <%= template.nama_lengkap %>
               </h3>
             </div>
-            <div>
+            <div class="flex items-center space-x-2">
+              <a href="#" 
+                 class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                 title="Download">
+                <i class="fas fa-download"></i>
+              </a>
               <a href="/template/view/<%= template.surat_id %>" 
                  target="_blank"
                  class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">

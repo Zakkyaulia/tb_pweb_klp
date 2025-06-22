@@ -4,6 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const requestController = require('../controllers/requestController');
+const { requireAuth } = require('../middleware/authMiddleware');
 
 const uploadsDir = path.join(__dirname, '../../uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -32,6 +33,9 @@ const upload = multer({
     }
   }
 });
+
+// Terapkan middleware requireAuth ke semua rute di bawah ini
+router.use(requireAuth);
 
 router.get('/step1', requestController.getStep1);
 router.post('/step1', requestController.postStep1);
