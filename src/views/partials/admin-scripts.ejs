@@ -36,6 +36,9 @@
 
     // Buka dropdown saat halaman dimuat
     document.addEventListener('DOMContentLoaded', function() {
-        openPermintaanDropdown();
+        const currentPath = window.location.pathname;
+        if (currentPath.startsWith('/admin/requests/')) {
+            openPermintaanDropdown();
+        }
     });
 </script> 
