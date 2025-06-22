@@ -11,8 +11,11 @@
         transition: all 0.3s ease;
     }
     .nav-link:hover {
-        color: #047857; /* Ubah warna teks saat hover */
-        background-color: rgba(5, 150, 105, 0.1); /* Latar belakang halus opsional */
+        background: linear-gradient(90deg, rgba(5, 150, 105, 0.05), rgba(4, 120, 87, 0.05));
+        color: #047857; /* Warna hijau yang lebih gelap untuk teks */
+    }
+    .nav-link:hover i {
+        color: #059669; /* Warna hijau yang lebih terang untuk ikon */
     }
     .submenu-link.active {
         background: linear-gradient(90deg, #f97316, #ea580c);
@@ -67,8 +70,8 @@
     }
     
     .btn-hover:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     /* Gaya Paginasi Universal (Sesuai Screenshot 1 & 2) */

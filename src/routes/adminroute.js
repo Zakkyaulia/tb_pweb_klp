@@ -125,9 +125,9 @@ router.post('/requests/comment/:id', adminController.updateRequestComment);
 // URL: /admin/detail-user
 router.get('/detail-user', async (req, res) => {
     try {
-        const { jurusan } = req.query;
+        const { jurusan, nim } = req.query;
         const page = parseInt(req.query.page) || 1;
-        const { users, totalPages, currentPage, totalUsers } = await userController.fetchAllUsers(jurusan, page);
+        const { users, totalPages, currentPage, totalUsers } = await userController.fetchAllUsers(jurusan, page, nim);
         const allJurusan = ["Sistem Informasi", "Teknik Komputer", "Informatika"]; // Daftar jurusan untuk dropdown
 
         res.render('admin/detailuser', { 
@@ -136,7 +136,8 @@ router.get('/detail-user', async (req, res) => {
             selectedJurusan: jurusan || 'Semua',
             totalPages: totalPages,
             currentPage: currentPage,
-            totalUsers: totalUsers
+            totalUsers: totalUsers,
+            searchNIM: nim || ''
         });
     } catch (error) {
         console.error('Error fetching users for detail page:', error);
@@ -147,7 +148,8 @@ router.get('/detail-user', async (req, res) => {
             selectedJurusan: 'Semua',
             totalPages: 1,
             currentPage: 1,
-            totalUsers: 0
+            totalUsers: 0,
+            searchNIM: ''
         });
     }
 });

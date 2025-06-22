@@ -7,6 +7,9 @@ const filterUrl = (page) => {
   if (typeof selectedJurusan !== 'undefined' && selectedJurusan && selectedJurusan !== 'Semua') {
     url += `&jurusan=${encodeURIComponent(selectedJurusan)}`;
   }
+  if (typeof searchNIM !== 'undefined' && searchNIM) {
+    url += `&nim=${encodeURIComponent(searchNIM)}`;
+  }
   return url;
 }
 %>
@@ -31,9 +34,15 @@ const filterUrl = (page) => {
           </select>
           <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-white pointer-events-none"></i>
         </div>
-        <div class="relative">
-          <input type="text" placeholder="Cari" class="border rounded-lg px-4 py-2 pl-10">
-          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <div class="flex items-center gap-2">
+          <form id="searchForm" class="relative flex items-center">
+            <input type="text" id="searchInput" name="nim" placeholder="Cari NIM..." value="<%= searchNIM %>" class="border rounded-lg px-4 py-2 pl-10">
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">Cari</button>
+          </form>
+          <button onclick="resetFilters()" title="Reset Filter" class="bg-gray-500 text-white h-10 w-10 flex items-center justify-center rounded-lg text-sm transition-all duration-300 hover:bg-gradient-to-br hover:from-orange-400 hover:to-orange-500">
+            <i class="fas fa-sync-alt"></i>
+          </button>
         </div>
       </div>
       <div class="flex items-center gap-4">
@@ -100,9 +109,14 @@ const filterUrl = (page) => {
 <script>
   function filterByJurusan() {
     const selectedJurusan = document.getElementById('jurusanFilter').value;
+    const searchInput = document.getElementById('searchInput').value;
     let url = `/admin/detail-user?page=1`;
+
     if (selectedJurusan && selectedJurusan !== 'Semua') {
       url += `&jurusan=${selectedJurusan}`;
+    }
+    if (searchInput) {
+      url += `&nim=${searchInput}`;
     }
     window.location.href = url;
   }
@@ -134,6 +148,15 @@ const filterUrl = (page) => {
     // Panggil saat pilihan filter berubah
     jurusanFilter.addEventListener('change', togglePdfButton);
   });
+
+  document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    filterByJurusan(); // Re-use the same logic
+  });
+
+  function resetFilters() {
+    window.location.href = '/admin/detail-user';
+  }
 </script>
 
 <%- include('../partials/admin-footer') %>

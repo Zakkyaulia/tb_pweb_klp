@@ -1,7 +1,8 @@
 // src/controllers/userController.js
-const { User } = require('../models');
+const { User, Sequelize } = require('../models');
+const Op = Sequelize.Op;
 
-const fetchAllUsers = async (jurusan, page) => {
+const fetchAllUsers = async (jurusan, page, nim) => {
   try {
     const findOptions = {
       where: {
@@ -11,6 +12,12 @@ const fetchAllUsers = async (jurusan, page) => {
 
     if (jurusan && jurusan !== 'Semua') {
       findOptions.where.jurusan = jurusan;
+    }
+    
+    if (nim) {
+      findOptions.where.nim = {
+        [Op.like]: `%${nim}%`
+      };
     }
 
     // Hanya terapkan paginasi jika 'page' diberikan
