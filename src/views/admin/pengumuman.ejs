@@ -2,7 +2,10 @@
 <%- include('../partials/navbar') %>
 
 <div class="relative flex-1 bg-green-800 p-10 min-h-screen text-white">
-  <i class="fas fa-user-circle user-icon text-white text-3xl z-50 absolute top-10 right-10 cursor-pointer hover:text-green-100"></i>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-lg mb-4">Kelola Pengumuman</h1>
+    <%- include('../partials/_user-menu') %>
+  </div>
   <div class="bg-white rounded-lg shadow-lg p-8 text-black mt-10">
   <div class="content-card bg-white rounded-xl shadow-lg p-8 animate-fade-in">
     <h2 class="text-xl font-bold text-gray-800 mb-4">Pengumuman</h2>
@@ -92,4 +95,5 @@
     }
 </script>
 
+<script src="/javascript/common.js"></script>
 <%- include('../partials/admin-footer') %>

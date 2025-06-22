@@ -4,8 +4,10 @@
 
 <!-- Main Content -->
 <div class="flex-1 bg-green-800 p-10 min-h-screen text-white">
-  <i class="fas fa-user-circle user-icon text-white text-2xl cursor-pointer transition-colors duration-200 ease-in-out hover:text-green-100 absolute right-10"></i>
-  <h1 class="text-lg mb-4">Selamat Datang, <span class="font-bold text-2xl"><%= user.username %></span></h1>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-lg mb-4">Selamat Datang, <span class="font-bold text-2xl"><%= user.username %></span></h1>
+    <%- include('../partials/_user-menu') %>
+  </div>
 
   <div class="bg-gray-100 p-6 rounded-md grid grid-cols-2 gap-4 text-black">
     <div class="bg-white shadow p-4 rounded">
@@ -32,4 +34,5 @@
   </div>
 </div>
 
+<script src="/javascript/common.js"></script>
 <%- include('../partials/admin-footer') %>

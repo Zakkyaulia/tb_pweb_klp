@@ -7,7 +7,7 @@ const userController = require('./usercontroller');
 // DASHBOARD
 exports.getDashboardStats = async (req, res) => {
     try {
-        const totalUsers = await users.count();
+        const totalUsers = await users.count({ where: { role: 'user' } });
         const totalRequests = await request_surat.count();
         const pendingRequests = await request_surat.count({ where: { status: 'diajukan' } });
         const processedRequests = await request_surat.count({ where: { status: 'diproses' } });
