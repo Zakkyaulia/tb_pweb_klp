@@ -8,4 +8,4 @@ router.get('/', templateController.getTemplates);
 // Lihat template PDF
 router.get('/view/:suratId', templateController.viewTemplateFile);
 
-module.exports = router;
+module.exports = { router };

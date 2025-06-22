@@ -54,41 +54,41 @@ exports.getRiwayat = async (req, res) => {
   }
 };
 
-exports.cetakPdf = async (req, res) => {
-  const statusFilter = req.query.status;
-
-  const whereCondition = {};
-
-  if (statusFilter && statusFilter !== 'all') {
-    if (statusFilter === 'diproses') {
-      whereCondition.status = 'diproses';
-    } else if (statusFilter === 'selesai') {
-      whereCondition.status = 'selesai';
-    } else if (statusFilter === 'diajukan') {
-      whereCondition.status = 'diajukan';
-    }
-  }
-
+exports.getDetail = async (req, res) => {
   try {
-    const requestsToPrint = await request_surat.findAll({
-      where: whereCondition,
-      order: [['createdAt', 'ASC']]
-    });
+    const { id } = req.params;
+    console.log('Detail request for ID:', id);
 
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="riwayat_surat_${statusFilter || 'semua'}.pdf"`
-    });
-    
-    res.send(`PDF untuk pengajuan status "${statusFilter || 'semua'}" akan digenerate di sini.
-    Data yang akan dicetak: ${JSON.stringify(requestsToPrint.map(r => {
-      const formatted = r.toJSON();
-      formatted.jenis_surat_lengkap = getJenisSuratName(r.jenis_surat);
-      return formatted;
-    }))}`);
+    const pengajuan = await request_surat.findByPk(id);
+    console.log('Found pengajuan:', pengajuan ? 'Yes' : 'No');
 
+    if (!pengajuan) {
+      console.log('Pengajuan not found for ID:', id);
+      return res.status(404).send('Pengajuan surat tidak ditemukan');
+    }
+
+    // Format data untuk ditampilkan
+    const detailData = {
+      id: pengajuan.id,
+      nama: pengajuan.nama,
+      nim: pengajuan.nim,
+      jurusan: pengajuan.jurusan,
+      jenis_surat: pengajuan.jenis_surat,
+      nama_lengkap_surat: getJenisSuratName(pengajuan.jenis_surat),
+      tanggal_request: pengajuan.tanggal_request,
+      status: pengajuan.status,
+      file_pengantar: pengajuan.file_pengantar,
+      komentar_admin: pengajuan.komentar_admin,
+      createdAt: pengajuan.createdAt,
+      updatedAt: pengajuan.updatedAt
+    };
+
+    console.log('Rendering detail-pengajuan with data:', detailData);
+    res.render('detail-pengajuan', {
+      data: detailData
+    });
   } catch (error) {
-    console.error('Error generating PDF:', error);
-    res.status(500).send('Gagal membuat PDF. Terjadi kesalahan server.');
+    console.error('Error getDetail:', error);
+    res.status(500).send('Terjadi kesalahan saat mengambil detail pengajuan');
   }
 };

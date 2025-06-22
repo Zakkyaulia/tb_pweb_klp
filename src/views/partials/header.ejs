@@ -185,12 +185,18 @@
     <header class="flex justify-between items-center px-8 py-4 bg-white shadow">
         <div class="flex items-center space-x-4">
             <img src="/images/download.png" alt="Logo" class="h-12" />
+        </div>
+        
+        <div class="flex-1 flex justify-center">
             <h1 class="text-3xl font-extrabold text-orange-600 tracking-wide">SIPAS</h1>
         </div>
+        
         <nav class="space-x-8 font-semibold text-lg">
             <a href="/request/step1" class="<%= active === 'Mulai' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Mulai</a>
             <a href="/template" class="<%= active === 'Template' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Template</a>
             <a href="/riwayat" class="<%= active === 'Riwayat' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Riwayat</a>
+            <a href="/profil" class="<%= active === 'Profil' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Profil</a>
+            <a href="/petunjuk" class="<%= active === 'Petunjuk' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Petunjuk</a>
         </nav>
     </header>
 </body>

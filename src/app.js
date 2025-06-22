@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = 3001;
+const PORT = 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -18,8 +18,8 @@ const requestRoutes = require('./routes/request');
 const riwayatRoutes = require('./routes/riwayat');
 const templateRoutes = require('./routes/template');
 
-app.use('/', indexRouter);
-app.use('/template', templateRoutes);
+app.use('/', indexRouter.router);
+app.use('/template', templateRoutes.router);
 app.use('/request', requestRoutes.router);
 app.use('/riwayat', riwayatRoutes.router);
 
@@ -28,6 +28,6 @@ app.use((req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server jalan di http://localhost:${PORT}`);
-  console.log(`Akses aplikasi di http://localhost:${PORT} untuk memulai.`);
+  console.log(`Server jalan di 
+    http://localhost:${PORT}`);
 });

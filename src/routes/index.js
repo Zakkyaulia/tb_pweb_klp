@@ -5,4 +5,4 @@ router.get('/', (req, res) => {
   res.redirect('/request/step1');
 });
 
-module.exports = router;
+module.exports = { router };
