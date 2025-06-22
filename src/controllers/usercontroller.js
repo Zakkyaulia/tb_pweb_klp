@@ -1,14 +1,31 @@
 // src/controllers/userController.js
 const { User } = require('../models');
 
-const fetchAllUsers = async () => {
+const fetchAllUsers = async (jurusan, page) => {
   try {
-    const users = await User.findAll({
+    const findOptions = {
       where: {
-        role: 'user' // Hanya ambil pengguna dengan role 'user'
+        role: 'user' // Selalu filter berdasarkan role 'user'
       }
-    });
-    return users; // Kembalikan data mentah untuk rendering
+    };
+
+    if (jurusan && jurusan !== 'Semua') {
+      findOptions.where.jurusan = jurusan;
+    }
+
+    // Hanya terapkan paginasi jika 'page' diberikan
+    if (page) {
+      const limit = 10;
+      const offset = (page - 1) * limit;
+      findOptions.limit = limit;
+      findOptions.offset = offset;
+    }
+
+    const { count, rows } = await User.findAndCountAll(findOptions);
+
+    const totalPages = page ? Math.ceil(count / 10) : 1;
+
+    return { users: rows, totalPages: totalPages, currentPage: page || 1, totalUsers: count };
   } catch (error) {
     console.error(error);
     throw error; // Lempar error agar ditangani di rute

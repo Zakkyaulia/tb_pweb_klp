@@ -584,3 +584,76 @@ exports.updateRequestComment = async (req, res) => {
     }
 };
 
+exports.generatePDFForUserDetail = async (req, res) => {
+    try {
+        const { jurusan } = req.query;
+        // Panggil fetchAllUsers tanpa paginasi untuk mendapatkan semua data yang relevan
+        const { users } = await require('./usercontroller').fetchAllUsers(jurusan, null); 
+
+        const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Laporan Detail Pengguna</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+                .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #059669; padding-bottom: 20px; }
+                .header h1 { color: #059669; margin: 0; font-size: 24px; }
+                .header p { margin: 5px 0; color: #666; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 12px; }
+                th { background-color: #059669; color: white; font-weight: bold; }
+                tr:nth-child(even) { background-color: #f9f9f9; }
+                .summary { margin-top: 20px; padding: 15px; background-color: #f0f9ff; border-left: 4px solid #059669; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>LAPORAN DATA PENGGUNA</h1>
+                <p>Jurusan: ${jurusan || 'Semua'}</p>
+                <p>Tanggal Generate: ${new Date().toLocaleDateString('id-ID')}</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>NIM</th>
+                        <th>Jurusan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${users.map((user, index) => `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${user.nama || ''}</td>
+                            <td>${user.nim || ''}</td>
+                            <td>${user.jurusan || ''}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <div class="summary">
+                <strong>Total Pengguna:</strong> ${users.length}
+            </div>
+        </body>
+        </html>
+        `;
+
+        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+        const page = await browser.newPage();
+        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+        const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+        await browser.close();
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="laporan-pengguna-${new Date().toISOString().split('T')[0]}.pdf"`);
+        res.send(pdfBuffer);
+
+    } catch (error) {
+        console.error('Error generating user detail PDF:', error);
+        res.status(500).send('Gagal membuat PDF.');
+    }
+};
+

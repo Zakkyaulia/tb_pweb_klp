@@ -121,4 +121,37 @@ router.get('/requests/diajukan/pdf', adminController.generatePDFForDiajukan);
 // Route untuk memperbarui komentar
 router.post('/requests/comment/:id', adminController.updateRequestComment);
 
+// Rute untuk menampilkan halaman detail pengguna
+// URL: /admin/detail-user
+router.get('/detail-user', async (req, res) => {
+    try {
+        const { jurusan } = req.query;
+        const page = parseInt(req.query.page) || 1;
+        const { users, totalPages, currentPage, totalUsers } = await userController.fetchAllUsers(jurusan, page);
+        const allJurusan = ["Sistem Informasi", "Teknik Komputer", "Informatika"]; // Daftar jurusan untuk dropdown
+
+        res.render('admin/detailuser', { 
+            users: users || [],
+            allJurusan: allJurusan,
+            selectedJurusan: jurusan || 'Semua',
+            totalPages: totalPages,
+            currentPage: currentPage,
+            totalUsers: totalUsers
+        });
+    } catch (error) {
+        console.error('Error fetching users for detail page:', error);
+        res.status(500).render('admin/detailuser', { 
+            users: [], 
+            error: 'Gagal memuat data pengguna.',
+            allJurusan: ["Sistem Informasi", "Teknik Komputer", "Informatika"],
+            selectedJurusan: 'Semua',
+            totalPages: 1,
+            currentPage: 1,
+            totalUsers: 0
+        });
+    }
+});
+
+router.get('/detail-user/pdf', adminController.generatePDFForUserDetail);
+
 module.exports = router;
