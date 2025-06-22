@@ -42,6 +42,27 @@
                         <% } %>
                     </tbody>
                 </table>
+                <!-- Pagination -->
+                <div class="flex justify-center items-center mt-6">
+                    <% if (totalPages > 0) { %>
+                        <span class="text-sm text-gray-600 mr-4">
+                            Halaman <%= currentPage %> dari <%= totalPages %>
+                        </span>
+                        <div class="flex">
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <a href="?page=<%= i %>" class="px-3 py-1 mx-1 rounded-md text-sm font-medium
+                                    <% if (i === currentPage) { %>
+                                        bg-orange-500 text-white shadow-md
+                                    <% } else { %>
+                                        bg-white text-gray-700 border border-gray-300 hover:bg-gray-100
+                                    <% } %>
+                                ">
+                                    <%= i %>
+                                </a>
+                            <% } %>
+                        </div>
+                    <% } %>
+                </div>
             </div>
         </div>
     </div>

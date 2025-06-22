@@ -93,12 +93,22 @@ router.get('/requests/selesai', async (req, res) => {
 
 router.get('/kelola-pengguna', async (req, res) => {
     try {
-        const users = await userController.fetchAllUsers();
-        console.log('Data users:', users); // Tambahkan log untuk debugging
-        res.render('admin/kelolapengguna', { users: users || [] });
+        const page = parseInt(req.query.page) || 1;
+        const { users, totalPages, currentPage } = await userController.fetchAllUsers(null, page, null);
+        
+        res.render('admin/kelolapengguna', { 
+            users: users || [],
+            totalPages: totalPages,
+            currentPage: currentPage
+        });
     } catch (error) {
         console.error('Error fetching users:', error);
-        res.status(500).render('admin/kelolapengguna', { users: [], error: 'Error fetching users' });
+        res.status(500).render('admin/kelolapengguna', { 
+            users: [], 
+            error: 'Error fetching users',
+            totalPages: 1,
+            currentPage: 1
+        });
     }
 });
 
