@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const app = express();
-const PORT = 3002;
+const PORT = 3000;
 
 app.use(session({
   secret: 'your-secret-key',
