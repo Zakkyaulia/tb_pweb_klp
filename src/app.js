@@ -1,55 +1,67 @@
 const express = require('express');
 const path = require('path');
+const multer = require('multer');
 const session = require('express-session');
 const app = express();
 const PORT = 3000;
 
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Session configuration
 app.use(session({
-  secret: 'your-secret-key',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
+    secret: 'your-secret-key-just-for-dev', // Ganti dengan secret yang lebih aman di produksi
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Atur 'secure: true' jika menggunakan HTTPS
 }));
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-app.use('/templates', express.static(path.join(__dirname, 'public', 'templates')));
-
+// View Engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-const indexRouter = require('./routes/index');
-const requestRoutes = require('./routes/request');
-const riwayatRoutes = require('./routes/riwayat');
-const templateRoutes = require('./routes/template');
+// Upload
+const upload = multer({ dest: 'uploads/' });
+
+// Import routes
 const authRoutes = require('./routes/authroute');
+const { router: requestRoutes } = require('./routes/request');
+// const adminRoutes = require('./routes/admin');
+const { router: templateRoutes } = require('./routes/template');
+const pengumumanRoutes = require('./routes/pengumuman');
+const { router: riwayatRoutes } = require('./routes/riwayat');
+const petunjukRoutes = require('./routes/petunjuk');
 
-app.use((req, res, next) => {
-  res.locals.user = req.session.user;
-  next();
-});
-
-app.get('/', (req, res) => {
-  if (req.session.user) {
-    res.redirect('/request/step1');
-  } else {
-    res.redirect('/login');
-  }
-});
-
+// Gunakan routes
 app.use('/', authRoutes);
-app.use('/request', requestRoutes.router);
-app.use('/riwayat', riwayatRoutes.router);
-app.use('/template', templateRoutes.router);
+app.use('/request', requestRoutes);
+// app.use('/', adminRoutes);
+app.use('/template', templateRoutes);
+app.use('/pengumuman', pengumumanRoutes);
+app.use('/riwayat', riwayatRoutes);
+app.use('/petunjuk', petunjukRoutes);
 
-app.use((req, res, next) => {
-  res.status(404).send("Maaf, halaman yang Anda cari tidak ditemukan!");
+// Default route - redirect to login
+app.get('/', (req, res) => {
+  res.redirect('/login');
 });
 
+// Upload surat (bisa disesuaikan penempatannya nanti)
+app.post('/upload-surat', upload.array('dokumen', 4), (req, res) => {
+  console.log('Jenis Surat:', req.body.jenisSurat);
+  console.log('Files:', req.files);
+  res.send('Surat berhasil diupload!');
+});
+
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server jalan di 
-    http://localhost:${PORT}`);
+  console.log(`Server jalan di http://localhost:${PORT}`);
 });
+
+// database
+const { sequelize } = require('./models');
+
+sequelize.sync({ force: false })
+  .then(() => console.log('Database dan model disinkronisasi'))
+  .catch(err => console.log('Error sinkronisasi:', err));

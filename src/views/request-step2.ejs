@@ -2,67 +2,66 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pengajuan Surat</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-green-700 font-sans">
   <%- include('partials/header', { active: 'Mulai' }) %>
-  <main class="max-w-4xl mx-auto mt-10 mb-20">
-    <div class="bg-white rounded-xl shadow px-10 py-10">
-      <h2 class="text-xl font-bold text-white bg-orange-400 px-4 py-2 rounded-t-xl mb-6">
-        <i class="fas fa-file-alt mr-2"></i>Pengajuan Surat
-      </h2>
+  <main class="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-xl shadow mb-10">
+    <h2 class="text-xl font-bold text-white bg-orange-400 px-4 py-2 rounded-t-xl mb-6">
+      <i class="fas fa-file-alt mr-2"></i>Pengajuan Surat
+    </h2>
 
-      <form method="POST" action="/request/submit" enctype="multipart/form-data"
-            class="space-y-6" onsubmit="return validateForm()">
-        <!-- Hidden input untuk tanggal dari step1 -->
-        <input type="hidden" name="tanggal" value="<%= tanggal %>">
-        
-        <div>
-          <label class="block text-gray-600 mb-2 text-lg font-medium">
-            <i class="fas fa-file-text mr-2"></i>Jenis Surat <span class="text-red-500">*</span>
-          </label>
-          <select name="jenisSuratId" id="jenisSurat" required
-                  class="w-full h-12 rounded-xl border-2 border-orange-400 px-4
-                  focus:outline-none focus:border-orange-600 transition-colors duration-200">
-            <option value="">-- Pilih Jenis Surat --</option>
-            <% if (typeof daftarSurat !== 'undefined' && daftarSurat.length > 0) { %>
-              <% daftarSurat.forEach(suratItem => { %>
-                <option value="<%= suratItem.surat_id %>"><%= suratItem.nama_lengkap %></option>
-              <% }) %>
-            <% } else { %>
-                <option value="" disabled>Tidak ada jenis surat tersedia</option>
-            <% } %>
-          </select>
-          <div id="jenisSuratError" class="text-red-500 text-sm mt-1 hidden">Jenis surat wajib dipilih</div>
-        </div>
+    <form method="POST" action="/request/submit" enctype="multipart/form-data"
+          class="space-y-6" onsubmit="return validateForm()">
+      <!-- Hidden input untuk tanggal dari step1 -->
+      <input type="hidden" name="tanggal" value="<%= tanggal %>">
+      
+      <div>
+        <label class="block text-gray-600 mb-2 text-lg font-medium">
+          <i class="fas fa-file-text mr-2"></i>Jenis Surat <span class="text-red-500">*</span>
+        </label>
+        <select name="jenisSuratId" id="jenisSurat" required
+                class="w-full h-12 rounded-xl border-2 border-orange-400 px-4
+                focus:outline-none focus:border-orange-600 transition-colors duration-200">
+          <option value="">-- Pilih Jenis Surat --</option>
+          <% if (typeof daftarSurat !== 'undefined' && daftarSurat.length > 0) { %>
+            <% daftarSurat.forEach(suratItem => { %>
+              <option value="<%= suratItem.surat_id %>"><%= suratItem.nama_lengkap %></option>
+            <% }) %>
+          <% } else { %>
+              <option value="" disabled>Tidak ada jenis surat tersedia</option>
+          <% } %>
+        </select>
+        <div id="jenisSuratError" class="text-red-500 text-sm mt-1 hidden">Jenis surat wajib dipilih</div>
+      </div>
 
-        <div>
-          <label class="block text-gray-600 mb-2 text-lg font-medium">
-            <i class="fas fa-upload mr-2"></i>File Pengantar <span class="text-red-500">*</span>
-          </label>
-          <input type="file"
-                 name="dokumen"
-                 id="dokumen"
-                 required
-                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                 class="w-full file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm
-                 file:font-semibold file:bg-orange-400 file:text-white hover:file:bg-orange-500
-                 border-2 border-orange-400 rounded-xl text-sm text-gray-600 transition-colors duration-200" />
-          <div id="dokumenError" class="text-red-500 text-sm mt-1 hidden">File pengantar wajib dipilih</div>
-          <p class="text-xs text-gray-500 mt-1">Format file yang diterima: PDF, DOC, DOCX, JPG, JPEG, PNG (Max: 5MB)</p>
-        </div>
+      <div>
+        <label class="block text-gray-600 mb-2 text-lg font-medium">
+          <i class="fas fa-upload mr-2"></i>File Pengantar <span class="text-red-500">*</span>
+        </label>
+        <input type="file"
+               name="dokumen"
+               id="dokumen"
+               required
+               accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+               class="w-full file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm
+               file:font-semibold file:bg-orange-400 file:text-white hover:file:bg-orange-500
+               border-2 border-orange-400 rounded-xl text-sm text-gray-600 transition-colors duration-200" />
+        <div id="dokumenError" class="text-red-500 text-sm mt-1 hidden">File pengantar wajib dipilih</div>
+        <p class="text-xs text-gray-500 mt-1">Format file yang diterima: PDF, DOC, DOCX, JPG, JPEG, PNG (Max: 5MB)</p>
+      </div>
 
-        <div class="text-center mt-8">
-          <button type="submit"
-                  class="bg-orange-600 hover:bg-orange-700 text-white font-bold px-12 py-3
-                  rounded-full transition-colors duration-200 transform hover:scale-105">
-            <i class="fas fa-upload mr-2"></i>AJUKAN
-          </button>
-        </div>
-      </form>
-    </div>
+      <div class="text-center mt-8">
+        <button type="submit"
+                class="bg-orange-600 hover:bg-orange-700 text-white font-bold px-12 py-3
+                rounded-full transition-colors duration-200 transform hover:scale-105">
+          <i class="fas fa-upload mr-2"></i>AJUKAN
+        </button>
+      </div>
+    </form>
   </main>
 
   <script>

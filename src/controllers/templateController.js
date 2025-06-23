@@ -5,7 +5,7 @@ const { surat } = require('../models');
 exports.getTemplates = async (req, res) => {
   try {
     const daftarTemplate = await surat.findAll({
-      attributes: ['surat_id', 'jenis_surat', 'template_file']
+      attributes: ['surat_id', 'jenis_surat']
     });
     
     // Mapping jenis surat ke nama lengkap untuk tampilan
@@ -31,33 +31,37 @@ exports.getTemplates = async (req, res) => {
   }
 };
 
+const templateFileMapping = {
+  'SKAK': 'SURAT KETERANGAN AKTIF KULIAH.pdf',
+  'SKL': 'SURAT KETERANGAN LULUS.pdf',
+  'SBSS': 'SURAT BERHENTI STUDI SEMENTARA.pdf',
+  'SAK': 'SURAT AKTIF KEMBALI.pdf',
+  'SKTMB': 'SURAT KETERANGAN TIDAK MENERIMA BEASISWA.pdf'
+};
+
 exports.viewTemplateFile = async (req, res) => {
   try {
-    const suratId = req.params.suratId;
-    console.log('Viewing template for surat_id:', suratId);
+    const suratId = req.params.id;
+    const suratData = await surat.findByPk(suratId, { attributes: ['jenis_surat'] });
+
+    if (!suratData) {
+      return res.status(404).send('Data surat tidak ditemukan.');
+    }
+
+    const fileName = templateFileMapping[suratData.jenis_surat];
     
-    // Ambil data surat dari database
-    const suratData = await surat.findByPk(suratId);
-    console.log('Surat data:', suratData);
-    
-    if (!suratData || !suratData.template_file) {
-      console.log('Template not found in database');
-      return res.status(404).send('Template tidak ditemukan');
+    if (!fileName) {
+      return res.status(404).send('File template untuk jenis surat ini tidak terdaftar.');
     }
     
-    // Path ke file template
-    const templatePath = path.join(__dirname, '..', 'public', 'templates', suratData.template_file);
-    console.log('Template path:', templatePath);
+    const templatePath = path.join(__dirname, '..', 'public', 'templates', fileName);
     
-    // Cek apakah file ada
     if (!fs.existsSync(templatePath)) {
-      console.log('Template file not found at path:', templatePath);
-      return res.status(404).send('File template tidak ditemukan');
+      return res.status(404).send('File template tidak ditemukan di server: ' + templatePath);
     }
     
-    // Kirim file PDF
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${suratData.template_file}"`);
+    res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
     res.sendFile(templatePath);
     
   } catch (error) {
@@ -66,54 +70,65 @@ exports.viewTemplateFile = async (req, res) => {
   }
 };
 
-// Function untuk update template file (untuk admin)
-exports.updateTemplateFile = async (req, res) => {
+exports.getTemplateDetail = async (req, res) => {
   try {
-    const suratId = req.params.suratId;
-    
-    if (!req.file) {
-      return res.send(`
-        <script>
-          showAlertAndRedirect("File template wajib diupload!", "error", "/template");
-        </script>
-      `);
-    }
-
+    const suratId = req.params.id;
     const suratData = await surat.findByPk(suratId);
+
     if (!suratData) {
-      return res.send(`
-        <script>
-          showAlertAndRedirect("Jenis surat tidak ditemukan!", "error", "/template");
-        </script>
-      `);
+      return res.render('template_detail', { template: null });
     }
 
-    // Hapus file lama jika ada
-    if (suratData.template_file) {
-      const oldFilePath = path.join(__dirname, '../../templates', suratData.template_file);
-      if (fs.existsSync(oldFilePath)) {
-        fs.unlinkSync(oldFilePath);
-      }
-    }
+    // Mapping jenis surat ke nama lengkap
+    const namaLengkapMapping = {
+      'SKAK': 'Surat Keterangan Aktif Kuliah',
+      'SKL': 'Surat Keterangan Lulus',
+      'SBSS': 'Surat Berhenti Studi Sementara',
+      'SAK': 'Surat Aktif Kembali',
+      'SKTMB': 'Surat Keterangan Tidak Menerima Beasiswa'
+    };
 
-    // Update database dengan nama file baru
-    await surat.update(
-      { template_file: req.file.filename },
-      { where: { surat_id: suratId } }
-    );
+    const template = {
+      surat_id: suratData.surat_id,
+      jenis_surat: suratData.jenis_surat,
+      nama_lengkap: namaLengkapMapping[suratData.jenis_surat] || suratData.jenis_surat,
+      template_file: templateFileMapping[suratData.jenis_surat] || 'File tidak tersedia'
+    };
 
-    res.send(`
-      <script>
-        showAlertAndRedirect("Template berhasil diupdate!", "success", "/template");
-      </script>
-    `);
-
+    res.render('template_detail', { template: template });
   } catch (error) {
-    console.error('Error updating template:', error);
-    res.send(`
-      <script>
-        showAlertAndRedirect("Terjadi kesalahan saat mengupdate template!", "error", "/template");
-      </script>
-    `);
+    console.error('Error getting template detail:', error);
+    res.status(500).render('template_detail', { template: null });
+  }
+};
+
+exports.downloadTemplate = async (req, res) => {
+  try {
+    const suratId = req.params.id;
+    const suratData = await surat.findByPk(suratId, { attributes: ['jenis_surat'] });
+
+    if (!suratData) {
+      return res.status(404).send('Data surat tidak ditemukan.');
+    }
+
+    const fileName = templateFileMapping[suratData.jenis_surat];
+    
+    if (!fileName) {
+      return res.status(404).send('File template untuk jenis surat ini tidak terdaftar.');
+    }
+    
+    const templatePath = path.join(__dirname, '..', 'public', 'templates', fileName);
+    
+    if (!fs.existsSync(templatePath)) {
+      return res.status(404).send('File template tidak ditemukan di server: ' + templatePath);
+    }
+    
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.sendFile(templatePath);
+    
+  } catch (error) {
+    console.error('Error downloading template:', error);
+    res.status(500).send('Terjadi kesalahan saat mengunduh template');
   }
 };

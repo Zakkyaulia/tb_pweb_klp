@@ -3,13 +3,14 @@ const router = express.Router();
 const templateController = require('../controllers/templateController');
 const { requireAuth } = require('../middleware/authMiddleware');
 
-// Terapkan middleware requireAuth ke semua rute di bawah ini
 router.use(requireAuth);
 
-// Halaman daftar template
 router.get('/', templateController.getTemplates);
 
-// Lihat template PDF
-router.get('/view/:suratId', templateController.viewTemplateFile);
+router.get('/view/:id', templateController.viewTemplateFile);
+
+router.get('/detail/:id', templateController.getTemplateDetail);
+
+router.get('/download/:id', templateController.downloadTemplate);
 
 module.exports = { router };

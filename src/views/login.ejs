@@ -49,6 +49,13 @@
     @keyframes fill {
       100% { box-shadow: inset 0 0 0 40px #059669; }
     }
+    /* Hide fake fields */
+    .fake-field {
+      position: absolute;
+      left: -9999px;
+      opacity: 0;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body class="bg-cover bg-center min-h-screen flex items-center justify-center p-4">
@@ -67,18 +74,40 @@
       <h1 class="text-6xl font-bold mb-2">SIPAS</h1>
       <p class="text-lg mb-8">Silahkan Login</p>
       
-      <form action="/login" method="POST" autocomplete="off">
+      <form id="loginForm" action="/login" method="POST" autocomplete="off">
+        <!-- Fake fields to trick browser autofill -->
+        <input type="text" class="fake-field" autocomplete="username">
+        <input type="password" class="fake-field" autocomplete="current-password">
+        
         <div class="mb-4">
           <label for="username" class="block text-sm font-medium mb-1">Username</label>
-          <input type="text" id="username" name="username" class="w-full text-black bg-white/80 border border-white/40 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500" required autocomplete="off">
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            class="w-full text-black bg-white/80 border border-white/40 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500" 
+            required 
+            autocomplete="new-password"
+            readonly
+            onfocus="this.removeAttribute('readonly');"
+          >
         </div>
         <div class="mb-6">
           <label for="password" class="block text-sm font-medium mb-1">Password</label>
-          <input type="password" id="password" name="password" class="w-full text-black bg-white/80 border border-white/40 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500" required autocomplete="off">
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="w-full text-black bg-white/80 border border-white/40 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500" 
+            required 
+            autocomplete="new-password"
+            readonly
+            onfocus="this.removeAttribute('readonly');"
+          >
         </div>
-        <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-lg transition-transform transform hover:scale-105">LOG IN</button>
+        <button type="submit" id="loginBtn" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-lg transition-transform transform hover:scale-105">LOG IN</button>
       </form>
-      
+
       <% if (typeof error !== 'undefined' && error) { %>
         <p class="text-red-400 mt-4 text-center font-semibold"><%= error %></p>
       <% } %>
@@ -105,8 +134,51 @@
   </div>
 
   <script>
-    // This script is intentionally left blank.
-    // The form submission is handled via standard HTML form action/method.
+    // Clear form fields when page loads and focus on username
+    document.addEventListener('DOMContentLoaded', function() {
+      // Clear fields after a short delay to ensure they're empty
+      setTimeout(function() {
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        
+        // Focus on username field
+        document.getElementById('username').focus();
+      }, 100);
+    });
+
+    // Prevent browser password confirmation popup
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      if (username && password) {
+        // Submit form programmatically without triggering browser popup
+        const formData = new URLSearchParams();
+        formData.append('username', username);
+        formData.append('password', password);
+        
+        fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formData.toString()
+        })
+        .then(response => {
+          if (response.redirected) {
+            window.location.href = response.url;
+          } else {
+            window.location.href = '/login?error=Login gagal';
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          window.location.href = '/login?error=Terjadi kesalahan';
+        });
+      }
+    });
   </script>
 </body>
 </html>

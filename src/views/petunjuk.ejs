@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petunjuk Penggunaan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script>
+    // Minimal script to ensure consistent layout
+    document.addEventListener('DOMContentLoaded', function() {
+      // Ensure consistent rendering
+    });
+  </script>
+</head>
+<body class="bg-green-700 font-sans">
+  <%- include('partials/header', { active: 'Petunjuk' }) %>
+  
+  <main class="max-w-6xl mx-auto mt-10 p-8 bg-white rounded-xl shadow mb-10">
+    <h2 class="text-xl font-bold text-white bg-orange-400 px-4 py-2 rounded-t-xl mb-6">
+      <i class="fas fa-question-circle mr-2"></i>Petunjuk Penggunaan SIPAS
+    </h2>
+    
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-gray-800">Alur Pengajuan Surat:</h3>
+        <ol class="list-decimal pl-6 space-y-3 text-gray-700">
+          <li><strong>Login:</strong> Masuk ke sistem dengan username dan password yang sudah terdaftar.</li>
+          <li><strong>Pilih Menu:</strong> Klik tombol "Mulai" di navbar untuk memulai pengajuan surat.</li>
+          <li><strong>Isi Data Dasar:</strong> Nama, NIM, dan Jurusan akan terisi otomatis. Anda hanya perlu memilih tanggal pengajuan.</li>
+          <li><strong>Pilih Jenis Surat:</strong> Pilih salah satu dari jenis surat yang tersedia.</li>
+          <li><strong>Upload Dokumen:</strong> Upload file dokumen pengantar yang diperlukan.</li>
+          <li><strong>Submit Pengajuan:</strong> Klik tombol submit untuk mengirim pengajuan.</li>
+          <li><strong>Monitor Status:</strong> Setelah submit, Anda akan diarahkan ke halaman "Riwayat" untuk melihat status pengajuan Anda.</li>
+        </ol>
+      </div>
+      
+      <div class="border-t pt-6">
+        <h3 class="text-lg font-semibold mb-4 text-gray-800">Status Pengajuan:</h3>
+        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+          <li><strong>Diajukan:</strong> Pengajuan baru berhasil dikirim dan menunggu verifikasi admin. Pengajuan dengan status ini masih dapat diedit atau dihapus.</li>
+          <li><strong>Diproses:</strong> Pengajuan sedang diverifikasi dan diproses oleh admin.</li>
+          <li><strong>Selesai:</strong> Surat telah selesai dibuat dan siap untuk diambil atau diunduh.</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

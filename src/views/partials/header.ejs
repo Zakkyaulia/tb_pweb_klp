@@ -24,82 +24,131 @@
         };
         
         alertDiv.innerHTML = `
-            <div class="relative p-4 text-white">
-                <div class="alert-close" onclick="closeAlert(this)">
-                    <i class="fas fa-times text-xs"></i>
+            <div class="alert-content">
+                <i class="${icons[type]}"></i>
+                <div class="alert-text">
+                    <h4>${titles[type]}</h4>
+                    <p>${message}</p>
                 </div>
-                <div class="flex items-start space-x-3">
-                    <div class="alert-icon">
-                        <i class="${icons[type]} text-sm"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-semibold text-sm mb-1">${titles[type]}</h4>
-                        <p class="text-sm opacity-90">${message}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="alert-progress">
-                <div class="alert-progress-bar"></div>
+                <button class="alert-close" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         `;
         
         container.appendChild(alertDiv);
         
-        // Show animation
         setTimeout(() => {
-            alertDiv.classList.add('show');
-        }, 100);
-        
-        // Auto remove
-        if (duration > 0) {
-            setTimeout(() => {
-                closeAlert(alertDiv.querySelector('.alert-close'));
-            }, duration);
-        }
-    }
-    
-    function closeAlert(closeBtn) {
-        const alertDiv = closeBtn.closest('.custom-alert');
-        alertDiv.classList.remove('show');
-        setTimeout(() => {
-            alertDiv.remove();
-        }, 300);
-    }
-    
-    // Function to show alert and redirect
-    function showAlertAndRedirect(message, type, url) {
-        showCustomAlert(message, type, 3000);
-        setTimeout(() => {
-            window.location.href = url;
-        }, 1500);
-    }
-    
-    // Function to show alert and go back
-    function showAlertAndGoBack(message, type) {
-        showCustomAlert(message, type, 3000);
-        setTimeout(() => {
-            window.history.back();
-        }, 1500);
+            if (alertDiv.parentElement) {
+                alertDiv.remove();
+            }
+        }, duration);
     }
 </script>
 
+<style>
+    .custom-alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 400px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .custom-alert.success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+    
+    .custom-alert.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+    
+    .custom-alert.warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+    }
+    
+    .custom-alert.info {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+    }
+    
+    .alert-content {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        gap: 12px;
+    }
+    
+    .alert-content i:first-child {
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+    
+    .alert-text {
+        flex: 1;
+    }
+    
+    .alert-text h4 {
+        margin: 0 0 4px 0;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    
+    .alert-text p {
+        margin: 0;
+        font-size: 13px;
+        opacity: 0.9;
+    }
+    
+    .alert-close {
+        background: none;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+    
+    .alert-close:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+</style>
+
 <header class="flex justify-between items-center px-8 py-4 bg-white shadow">
     <div class="flex items-center">
-        <img src="/images/download.png" alt="Logo FTI" class="h-12 w-auto object-contain" />
+        <img src="/images/download.png" alt="Logo FTI" class="h-10 w-auto object-contain" />
     </div>
-    
+
     <div class="flex-1 flex justify-center">
-        <h1 class="text-3xl font-extrabold text-orange-600 tracking-wide">SIPAS</h1>
+        <h1 class="text-4xl font-extrabold text-orange-600 tracking-wide">SIPAS</h1>
     </div>
-    
-    <nav class="space-x-8 font-semibold text-lg">
+
+    <nav class="space-x-6 font-medium text-sm">
         <a href="/request/step1" class="<%= active === 'Mulai' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Mulai</a>
         <a href="/template" class="<%= active === 'Template' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Template</a>
         <a href="/riwayat" class="<%= active === 'Riwayat' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Riwayat</a>
         <a href="/pengumuman" class="<%= active === 'Pengumuman' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Pengumuman</a>
         <a href="/petunjuk" class="<%= active === 'Petunjuk' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Petunjuk</a>
-        <% if (typeof user !== 'undefined' && user) { %>
-            <a href="/logout" class="text-gray-800 hover:text-orange-600">Logout</a>
-        <% } %>
+        <a href="/logout" class="text-gray-800 hover:text-red-600 transition-colors duration-200">
+            <i class="fas fa-sign-out-alt mr-1"></i>Logout
+        </a>
     </nav>
 </header> 
