@@ -101,34 +101,3 @@ exports.getTemplateDetail = async (req, res) => {
     res.status(500).render('template_detail', { template: null });
   }
 };
-
-exports.downloadTemplate = async (req, res) => {
-  try {
-    const suratId = req.params.id;
-    const suratData = await surat.findByPk(suratId, { attributes: ['jenis_surat'] });
-
-    if (!suratData) {
-      return res.status(404).send('Data surat tidak ditemukan.');
-    }
-
-    const fileName = templateFileMapping[suratData.jenis_surat];
-    
-    if (!fileName) {
-      return res.status(404).send('File template untuk jenis surat ini tidak terdaftar.');
-    }
-    
-    const templatePath = path.join(__dirname, '..', 'public', 'templates', fileName);
-    
-    if (!fs.existsSync(templatePath)) {
-      return res.status(404).send('File template tidak ditemukan di server: ' + templatePath);
-    }
-    
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-    res.sendFile(templatePath);
-    
-  } catch (error) {
-    console.error('Error downloading template:', error);
-    res.status(500).send('Terjadi kesalahan saat mengunduh template');
-  }
-};

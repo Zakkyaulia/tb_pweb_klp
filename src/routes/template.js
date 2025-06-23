@@ -11,6 +11,4 @@ router.get('/view/:id', templateController.viewTemplateFile);
 
 router.get('/detail/:id', templateController.getTemplateDetail);
 
-router.get('/download/:id', templateController.downloadTemplate);
-
 module.exports = { router };

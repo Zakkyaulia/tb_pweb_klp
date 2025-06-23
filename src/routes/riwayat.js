@@ -7,6 +7,5 @@ const { requireAuth } = require('../middleware/authMiddleware');
 router.use(requireAuth);
 
 router.get('/', riwayatController.getRiwayat);
-router.get('/detail/:id', riwayatController.getDetail);
 
 module.exports = { router };
