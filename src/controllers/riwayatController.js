@@ -1,6 +1,6 @@
 const { request_surat, surat } = require('../models');
 
-// Mapping untuk jenis surat
+// Mapping singkatan jenis surat ke nama lengkap
 const jenisSuratMapping = {
   'SKAK': 'Surat Keterangan Aktif Kuliah',
   'SKL': 'Surat Keterangan Lulus',
@@ -11,25 +11,23 @@ const jenisSuratMapping = {
   'SKTMB': 'Surat Keterangan Tidak Menerima Beasiswa'
 };
 
+// Fungsi untuk mendapatkan nama lengkap jenis surat
 const getJenisSuratName = (abbreviation) => {
   return jenisSuratMapping[abbreviation] || abbreviation;
 };
 
+// Controller untuk menampilkan riwayat pengajuan surat milik user yang sedang login
 exports.getRiwayat = async (req, res) => {
   try {
-    const filter = req.query.filter || 'Semua'; // Default ke 'Semua'
-
-    const whereCondition = {};
-
+    const filter = req.query.filter || 'Semua';
+    const whereCondition = { user_id: req.session.user.id };
     if (filter && filter !== 'Semua') {
       whereCondition.jenis_surat = filter;
     }
-
     const data = await request_surat.findAll({
       where: whereCondition,
       order: [['createdAt', 'DESC']]
     });
-
     const formattedData = data.map(item => ({
       id: item.id,
       nama: item.nama,
@@ -43,13 +41,11 @@ exports.getRiwayat = async (req, res) => {
       komentar_admin: item.komentar_admin,
       createdAt: item.createdAt
     }));
-
     res.render('riwayat', {
       data: formattedData,
       filter: filter
     });
   } catch (error) {
-    console.error('Error getRiwayat:', error);
     res.status(500).send('Terjadi kesalahan saat mengambil data riwayat');
   }
 };

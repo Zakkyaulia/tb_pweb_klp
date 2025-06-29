@@ -26,6 +26,9 @@ module.exports = {
       }
     });
 
+    // Ubah tipe kolom template_file menjadi BLOB('long') setelah createTable
+    await queryInterface.changeColumn('surat', 'template_file', { type: Sequelize.BLOB('long'), allowNull: true });
+
     // Seed initial data
     await queryInterface.bulkInsert('surat', [
       { jenis_surat: 'SKAK', template_file: null, createdAt: new Date(), updatedAt: new Date() },

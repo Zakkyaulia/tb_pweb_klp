@@ -5,26 +5,23 @@ const session = require('express-session');
 const app = express();
 const PORT = 3000;
 
-// Middleware
+// Middleware untuk parsing form dan static file
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Session configuration
+// Konfigurasi session
 app.use(session({
-    secret: 'your-secret-key-just-for-dev', // Ganti dengan secret yang lebih aman di produksi
+    secret: 'your-secret-key-just-for-dev', // Ganti secret di produksi
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Atur 'secure: true' jika menggunakan HTTPS
+    cookie: { secure: false }
 }));
 
-// View Engine
+// Set view engine EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Upload
-const upload = multer({ dest: 'uploads/' });
-
-// Import routes
+// Import dan gunakan routes utama
 const authRoutes = require('./routes/authroute');
 const { router: requestRoutes } = require('./routes/request');
 // const adminRoutes = require('./routes/admin');
@@ -41,13 +38,6 @@ app.use('/riwayat', riwayatRoutes);
 // Default route - redirect to login
 app.get('/', (req, res) => {
   res.redirect('/login');
-});
-
-// Upload surat (bisa disesuaikan penempatannya nanti)
-app.post('/upload-surat', upload.array('dokumen', 4), (req, res) => {
-  console.log('Jenis Surat:', req.body.jenisSurat);
-  console.log('Files:', req.files);
-  res.send('Surat berhasil diupload!');
 });
 
 // Start server

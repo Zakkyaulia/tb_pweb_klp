@@ -3,10 +3,13 @@ const {
   Model
 } =
 require('sequelize');
+
+// Model untuk tabel pengumuman
 module.exports =
 (sequelize, DataTypes) => {
   class pengumuman extends Model {
     static associate(models) {
+      // Tambahkan relasi jika diperlukan
     }
   }
   pengumuman.init({

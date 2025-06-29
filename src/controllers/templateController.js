@@ -1,14 +1,15 @@
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs'); // dihapus karena tidak digunakan
 const { surat } = require('../models');
 
+// Controller untuk menampilkan daftar template surat
 exports.getTemplates = async (req, res) => {
   try {
     const daftarTemplate = await surat.findAll({
       attributes: ['surat_id', 'jenis_surat']
     });
     
-    // Mapping jenis surat ke nama lengkap untuk tampilan
+    // Mapping nama lengkap jenis surat
     const namaLengkapMapping = {
       'SKAK': 'Surat Keterangan Aktif Kuliah',
       'SKL': 'Surat Keterangan Lulus',
@@ -39,65 +40,21 @@ const templateFileMapping = {
   'SKTMB': 'SURAT KETERANGAN TIDAK MENERIMA BEASISWA.pdf'
 };
 
+// Controller untuk menampilkan file template PDF dari database
 exports.viewTemplateFile = async (req, res) => {
-  try {
-    const suratId = req.params.id;
-    const suratData = await surat.findByPk(suratId, { attributes: ['jenis_surat'] });
-
-    if (!suratData) {
-      return res.status(404).send('Data surat tidak ditemukan.');
-    }
-
-    const fileName = templateFileMapping[suratData.jenis_surat];
-    
-    if (!fileName) {
-      return res.status(404).send('File template untuk jenis surat ini tidak terdaftar.');
-    }
-    
-    const templatePath = path.join(__dirname, '..', 'public', 'templates', fileName);
-    
-    if (!fs.existsSync(templatePath)) {
-      return res.status(404).send('File template tidak ditemukan di server: ' + templatePath);
-    }
-    
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
-    res.sendFile(templatePath);
-    
-  } catch (error) {
-    console.error('Error viewing template:', error);
-    res.status(500).send('Terjadi kesalahan saat menampilkan template');
-  }
-};
-
-exports.getTemplateDetail = async (req, res) => {
   try {
     const suratId = req.params.id;
     const suratData = await surat.findByPk(suratId);
 
-    if (!suratData) {
-      return res.render('template_detail', { template: null });
+    if (!suratData || !suratData.template_file) {
+      return res.status(404).send('File template tidak ditemukan di database.');
     }
-
-    // Mapping jenis surat ke nama lengkap
-    const namaLengkapMapping = {
-      'SKAK': 'Surat Keterangan Aktif Kuliah',
-      'SKL': 'Surat Keterangan Lulus',
-      'SBSS': 'Surat Berhenti Studi Sementara',
-      'SAK': 'Surat Aktif Kembali',
-      'SKTMB': 'Surat Keterangan Tidak Menerima Beasiswa'
-    };
-
-    const template = {
-      surat_id: suratData.surat_id,
-      jenis_surat: suratData.jenis_surat,
-      nama_lengkap: namaLengkapMapping[suratData.jenis_surat] || suratData.jenis_surat,
-      template_file: templateFileMapping[suratData.jenis_surat] || 'File tidak tersedia'
-    };
-
-    res.render('template_detail', { template: template });
+    
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="template.pdf"`);
+    res.end(suratData.template_file);
   } catch (error) {
-    console.error('Error getting template detail:', error);
-    res.status(500).render('template_detail', { template: null });
+    console.error('Error viewing template:', error);
+    res.status(500).send('Terjadi kesalahan saat menampilkan template');
   }
 };

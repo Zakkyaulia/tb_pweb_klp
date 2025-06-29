@@ -1,3 +1,4 @@
+// Middleware untuk memastikan user sudah login
 const requireAuth = (req, res, next) => {
     if (req.session && req.session.user) {
         // User is authenticated, allow access
@@ -8,6 +9,7 @@ const requireAuth = (req, res, next) => {
     }
 };
 
+// Middleware untuk memastikan user belum login (guest)
 const requireGuest = (req, res, next) => {
     if (req.session && req.session.user) {
         // User is authenticated, redirect away from guest pages (e.g., to dashboard)

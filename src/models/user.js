@@ -2,8 +2,11 @@
 const {
   Model
 } = require('sequelize');
+
+// Model untuk tabel user
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
+    // Relasi ke request_surat
     static associate(models) {
       User.hasMany(models.request_surat, {
         foreignKey: 'user_id',

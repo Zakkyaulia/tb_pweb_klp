@@ -3,12 +3,12 @@ const router = express.Router();
 const templateController = require('../controllers/templateController');
 const { requireAuth } = require('../middleware/authMiddleware');
 
+// Middleware autentikasi untuk semua route template
 router.use(requireAuth);
 
+// Tampilkan daftar template surat
 router.get('/', templateController.getTemplates);
-
+// Tampilkan file template PDF (preview)
 router.get('/view/:id', templateController.viewTemplateFile);
-
-router.get('/detail/:id', templateController.getTemplateDetail);
 
 module.exports = { router };
