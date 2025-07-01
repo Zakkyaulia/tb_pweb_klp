@@ -27,6 +27,8 @@ const { router: requestRoutes } = require('./routes/request');
 // const adminRoutes = require('./routes/admin');
 const { router: templateRoutes } = require('./routes/template');
 const { router: riwayatRoutes } = require('./routes/riwayat');
+const pengumumanRoutes = require('./routes/pengumuman');
+const petunjukRoutes = require('./routes/petunjuk');
 
 // Gunakan routes
 app.use('/', authRoutes);
@@ -34,6 +36,8 @@ app.use('/request', requestRoutes);
 // app.use('/', adminRoutes);
 app.use('/template', templateRoutes);
 app.use('/riwayat', riwayatRoutes);
+app.use('/pengumuman', pengumumanRoutes);
+app.use('/petunjuk', petunjukRoutes);
 
 // Default route - redirect to login
 app.get('/', (req, res) => {

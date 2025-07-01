@@ -40,7 +40,8 @@ module.exports = {
         defaultValue: 'diajukan',
       },
       file_pengantar: {
-        type: Sequelize.STRING
+        type: Sequelize.BLOB('long'),
+        allowNull: true
       },
       komentar_admin: {
         type: Sequelize.TEXT

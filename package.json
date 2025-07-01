@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "migrate": "sequelize db:migrate",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "npx sequelize-cli db:migrate",
     "db:migrate": "sequelize db:migrate",
     "db:migrate:generate": "sequelize migration:generate",
     "db:seed:all": "sequelize db:seed:all",

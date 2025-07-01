@@ -10,5 +10,9 @@ router.use(requireAuth);
 router.get('/', templateController.getTemplates);
 // Tampilkan file template PDF (preview)
 router.get('/view/:id', templateController.viewTemplateFile);
+// Tampilkan detail template surat
+router.get('/template_detail/:id', templateController.detailTemplate);
+// Download file template PDF
+router.get('/download/:id', templateController.downloadTemplateFile);
 
 module.exports = { router };

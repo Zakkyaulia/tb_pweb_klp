@@ -3,15 +3,18 @@ const path = require('path');
 const { User, request_surat, surat } = require('../models');
 
 // Mapping singkatan jenis surat ke nama lengkap
-const getJenisSuratName = (kode) => {
-  const mapping = {
-    'SKAK': 'Surat Keterangan Aktif Kuliah',
-    'SKL': 'Surat Keterangan Lulus',
-    'SBSS': 'Surat Berhenti Studi Sementara',
-    'SAK': 'Surat Aktif Kembali',
-    'SKTMB': 'Surat Keterangan Tidak Menerima Beasiswa'
-  };
-  return mapping[kode] || kode;
+const jenisSuratMapping = {
+  'SKAK': 'Surat Keterangan Aktif Kuliah',
+  'SKL': 'Surat Keterangan Lulus',
+  'SKP': 'Surat Keterangan Pengantar',
+  'SKM': 'Surat Keterangan Magang',
+  'SBSS': 'Surat Berhenti Studi Sementara',
+  'SAK': 'Surat Aktif Kembali',
+  'SKTMB': 'Surat Keterangan Tidak Menerima Beasiswa'
+};
+
+const getJenisSuratName = (abbreviation) => {
+  return jenisSuratMapping[abbreviation] || abbreviation;
 };
 
 // Tampilkan form step 1 pengajuan surat
@@ -48,16 +51,9 @@ exports.getStep2 = async (req, res) => {
     const daftarSurat = await surat.findAll({
       attributes: ['surat_id', 'jenis_surat']
     });
-    const suratMapping = {
-      'SKAK': 'Surat Keterangan Aktif Kuliah',
-      'SKL': 'Surat Keterangan Lulus',
-      'SBSS': 'Surat Berhenti Studi Sementara',
-      'SAK': 'Surat Aktif Kembali',
-      'SKTMB': 'Surat Keterangan Tidak Menerima Beasiswa'
-    };
     const daftarSuratDenganNama = daftarSurat.map(item => ({
       ...item.toJSON(),
-      nama_lengkap: suratMapping[item.jenis_surat] || item.jenis_surat
+      nama_lengkap: getJenisSuratName(item.jenis_surat)
     }));
     res.render('request-step2', { 
       active: 'Mulai', 
@@ -269,6 +265,22 @@ exports.deleteRequest = async (req, res) => {
         window.location.href = "/riwayat";
       </script>
     `);
+  }
+};
+
+// Controller untuk menampilkan detail pengajuan surat
+exports.getDetail = async (req, res) => {
+  try {
+    const data = await request_surat.findByPk(req.params.id);
+    if (!data) {
+      return res.send(`<script>alert('Data tidak ditemukan!');window.location.href='/riwayat';</script>`);
+    }
+    const dataObj = data.toJSON ? data.toJSON() : data;
+    console.log('DATA DETAIL:', dataObj); // Log debug untuk melihat isi data
+    dataObj.nama_lengkap_surat = getJenisSuratName(dataObj.jenis_surat);
+    res.render('detail-pengajuan', { data: dataObj });
+  } catch (error) {
+    res.send(`<script>alert('Terjadi kesalahan saat mengambil detail!');window.location.href='/riwayat';</script>`);
   }
 };
 

@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       template_file: {
-        type: Sequelize.STRING,
+        type: Sequelize.BLOB('long'),
         allowNull: true
       },
       createdAt: {
@@ -25,9 +25,6 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-
-    // Ubah tipe kolom template_file menjadi BLOB('long') setelah createTable
-    await queryInterface.changeColumn('surat', 'template_file', { type: Sequelize.BLOB('long'), allowNull: true });
 
     // Seed initial data
     await queryInterface.bulkInsert('surat', [

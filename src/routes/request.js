@@ -23,5 +23,9 @@ router.get('/edit/:id', requestController.getEdit);
 router.post('/edit/:id', upload.single('dokumen'), requestController.postEdit);
 // Hapus pengajuan surat
 router.delete('/delete/:id', requestController.deleteRequest);
+// Edit pengajuan surat
+router.get('/edit-request/:id', requestController.getEdit);
+// Detail pengajuan surat
+router.get('/detail/:id', requestController.getDetail);
 
 module.exports = { router };
