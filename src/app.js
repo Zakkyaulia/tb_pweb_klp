@@ -3,7 +3,7 @@ const path = require('path');
 const multer = require('multer');
 const session = require('express-session');
 const app = express();
-const PORT = 3000;
+const PORT = 7000;
 
 // Middleware untuk parsing form dan static file
 app.use(express.urlencoded({ extended: true }));
