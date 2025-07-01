@@ -1,0 +1,154 @@
+<!-- Custom Alert Container -->
+<div id="alertContainer"></div>
+
+<!-- Custom Alert JavaScript -->
+<script>
+    function showCustomAlert(message, type = 'info', duration = 5000) {
+        const container = document.getElementById('alertContainer');
+        
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `custom-alert ${type}`;
+        
+        const icons = {
+            success: 'fas fa-check',
+            error: 'fas fa-times',
+            warning: 'fas fa-exclamation-triangle',
+            info: 'fas fa-info-circle'
+        };
+        
+        const titles = {
+            success: 'Berhasil!',
+            error: 'Error!',
+            warning: 'Peringatan!',
+            info: 'Informasi'
+        };
+        
+        alertDiv.innerHTML = `
+            <div class="alert-content">
+                <i class="${icons[type]}"></i>
+                <div class="alert-text">
+                    <h4>${titles[type]}</h4>
+                    <p>${message}</p>
+                </div>
+                <button class="alert-close" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        container.appendChild(alertDiv);
+        
+        setTimeout(() => {
+            if (alertDiv.parentElement) {
+                alertDiv.remove();
+            }
+        }, duration);
+    }
+</script>
+
+<style>
+    .custom-alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 400px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .custom-alert.success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+    
+    .custom-alert.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+    
+    .custom-alert.warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+    }
+    
+    .custom-alert.info {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+    }
+    
+    .alert-content {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        gap: 12px;
+    }
+    
+    .alert-content i:first-child {
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+    
+    .alert-text {
+        flex: 1;
+    }
+    
+    .alert-text h4 {
+        margin: 0 0 4px 0;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    
+    .alert-text p {
+        margin: 0;
+        font-size: 13px;
+        opacity: 0.9;
+    }
+    
+    .alert-close {
+        background: none;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+    
+    .alert-close:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+</style>
+
+<header class="flex justify-between items-center px-8 py-4 bg-white shadow">
+    <div class="flex items-center">
+        <img src="/images/download.png" alt="Logo FTI" class="h-10 w-auto object-contain" />
+    </div>
+
+    <div class="flex-1 flex justify-center">
+        <h1 class="text-4xl font-extrabold text-orange-600 tracking-wide">SIPAS</h1>
+    </div>
+
+    <nav class="space-x-6 font-medium text-sm">
+        <a href="/request/step1" class="<%= active === 'Mulai' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Mulai</a>
+        <a href="/template" class="<%= active === 'Template' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Template</a>
+        <a href="/riwayat" class="<%= active === 'Riwayat' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Riwayat</a>
+        <a href="/pengumuman" class="<%= active === 'Pengumuman' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Pengumuman</a>
+        <a href="/petunjuk" class="<%= active === 'Petunjuk' ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600' %>">Petunjuk</a>
+        <a href="/logout" class="text-gray-800 hover:text-red-600 transition-colors duration-200">
+            <i class="fas fa-sign-out-alt mr-1"></i>Logout
+        </a>
+    </nav>
+</header> 

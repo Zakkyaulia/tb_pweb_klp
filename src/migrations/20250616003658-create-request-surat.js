@@ -24,6 +24,13 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+<<<<<<< HEAD
+=======
+      jurusan: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+>>>>>>> loly
       jenis_surat: {
         type: Sequelize.STRING,
         allowNull: false
